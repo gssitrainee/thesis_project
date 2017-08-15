@@ -21,6 +21,7 @@ package com.thesis.project.controllers;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoDatabase;
+import com.thesis.project.dao.ClassDAO;
 import com.thesis.project.dao.PostDAO;
 import com.thesis.project.dao.SessionDAO;
 import com.thesis.project.dao.UserDAO;
@@ -54,6 +55,7 @@ import static spark.Spark.setPort;
  */
 public class ProjectController {
     private final Configuration cfg;
+    private final ClassDAO classDAO;
     private final PostDAO postDAO;
     private final UserDAO userDAO;
     private final SessionDAO sessionDAO;
@@ -71,6 +73,7 @@ public class ProjectController {
         final MongoClient mongoClient = new MongoClient(new MongoClientURI(mongoURIString));
         final MongoDatabase blogDatabase = mongoClient.getDatabase("thesis");
 
+        classDAO = new ClassDAO(blogDatabase);
         postDAO = new PostDAO(blogDatabase);
         userDAO = new UserDAO(blogDatabase);
         sessionDAO = new SessionDAO(blogDatabase);
@@ -112,17 +115,34 @@ public class ProjectController {
 
     private void initializeRoutes() throws IOException {
         // this is the blog home page
-        get(new FreemarkerBasedRoute("/", "blog_template.ftl") {
+        get(new FreemarkerBasedRoute("/", "home.ftl") {
             @Override
             public void doHandle(Request request, Response response, Writer writer) throws IOException, TemplateException {
-                String username = sessionDAO.findUserNameBySessionId(getSessionCookie(request));
-
-                List<Document> posts = postDAO.findByDateDescending(10);
+                Document user = null;
                 SimpleHash root = new SimpleHash();
+                String username = sessionDAO.findUserNameBySessionId(getSessionCookie(request));
+                String statusMsg = getFlashMessage(request, "status_msg");
 
-                root.put("myposts", posts);
-                if (username != null) {
+                if(null!=statusMsg && !"".equals(statusMsg))
+                    root.put("statusMsg", statusMsg);
+
+                if(null!=username){
                     root.put("username", username);
+
+                    user = userDAO.getUserInfo(username);
+
+                    if(null!=user){
+                        root.put("userType", user.getString("userType"));
+                        if("T".equals(user.getString("userType"))){
+                            List<Document> userClasses = classDAO.getAllClassesByTeacher(username);
+                            root.put("userClasses", userClasses);
+                        }
+                        else if("S".equals(user.getString("userType"))){
+                            //TODO: Add List of Class enrolled.
+                            //TODO: Add List of Active Quizzes not taken.
+                        }
+                    }
+
                 }
 
                 template.process(root, writer);
@@ -166,15 +186,16 @@ public class ProjectController {
                 String username = request.queryParams("username");
                 String password = request.queryParams("password");
                 String verify = request.queryParams("verify");
+                String userType = request.queryParams("userType");
 
-                HashMap<String, String> root = new HashMap<String, String>();
+                HashMap<String, String> root = new HashMap<>();
                 root.put("username", StringEscapeUtils.escapeHtml4(username));
                 root.put("email", StringEscapeUtils.escapeHtml4(email));
 
-                if (validateSignup(username, password, verify, email, root)) {
+                if (validateSignup(username, password, verify, email, userType, root)) {
                     // good user
                     System.out.println("Signup: Creating user with: " + username + " " + password);
-                    if (!userDAO.addUser(username, password, email)) {
+                    if (!userDAO.addUser(username, password, email, userType)) {
                         // duplicate user
                         root.put("username_error", "Username already in use, Please choose another");
                         template.process(root, writer);
@@ -212,13 +233,118 @@ public class ProjectController {
                 root.put("username_error", "");
                 root.put("email_error", "");
                 root.put("verify_error", "");
+                root.put("userType_error", "");
 
                 template.process(root, writer);
             }
         });
 
         // will present the form used to process new blog posts
-        get(new FreemarkerBasedRoute("/newpost", "newpost_template.ftl") {
+        get(new FreemarkerBasedRoute("/class", "course_template.ftl") {
+            @Override
+            protected void doHandle(Request request, Response response, Writer writer) throws IOException, TemplateException {
+                String classCode = request.queryParams("code");
+
+                // get cookie
+                String username = sessionDAO.findUserNameBySessionId(getSessionCookie(request));
+
+                HashMap<String, String> root = new HashMap<>();
+
+                if(null!=classCode){
+                    Document docClass = classDAO.findByClassCode(classCode);
+                    if(null!=docClass){
+                        String className = docClass.getString("className");
+                        String classDescription = docClass.getString("classDescription");
+
+                        root.put("classCode", classCode);
+                        root.put("className", className);
+                        root.put("classDescription", classDescription);
+                        root.put("username", username);
+                    }
+                    else {
+                        root.put("errors", "Class not found!");
+                    }
+                }
+                else
+                    root.put("errors", "Class code is blank!");
+
+                template.process(root, writer);
+            }
+        });
+
+        // will present the form used to process creation of new class
+        get(new FreemarkerBasedRoute("/newcourse", "course_template.ftl") {
+            @Override
+            protected void doHandle(Request request, Response response, Writer writer) throws IOException, TemplateException {
+                Document user = null;
+
+                // get cookie
+                String username = sessionDAO.findUserNameBySessionId(getSessionCookie(request));
+                if(null!=username)
+                    user = userDAO.getUserInfo(username);
+
+                if (username == null) {
+                    // looks like a bad request. user is not logged in
+                    response.redirect("/login");
+                }
+                else if((null!=user && "S".equals(user.getString("userType")))){
+                    // Students should not be able to register a class
+                    response.redirect("/login?errors=Students are not allowed to register a class.");
+                }
+                else {
+                    SimpleHash root = new SimpleHash();
+                    root.put("username", username);
+                    template.process(root, writer);
+                }
+            }
+        });
+
+
+
+        // handle the new class registration
+        post(new FreemarkerBasedRoute("/save_class", "course_template.ftl") {
+            @Override
+            protected void doHandle(Request request, Response response, Writer writer) throws IOException, TemplateException {
+
+                String classCode = StringEscapeUtils.escapeHtml4(request.queryParams("classCode"));
+                String className = StringEscapeUtils.escapeHtml4(request.queryParams("className"));
+                String classDescription = StringEscapeUtils.escapeHtml4(request.queryParams("classDescription"));
+
+                String username = sessionDAO.findUserNameBySessionId(getSessionCookie(request));
+
+                if (username == null) {
+                    response.redirect("/login");    // only logged in users can post to blog
+                }
+                else if (classCode.equals("") || className.equals("") || classDescription.equals("")) {
+                    // redisplay page with errors
+                    HashMap<String, String> root = new HashMap<String, String>();
+                    root.put("errors", "Please complete class details.");
+                    root.put("classCode", classCode);
+                    root.put("className", className);
+                    root.put("classDescription", classDescription);
+                    root.put("username", username);
+                    template.process(root, writer);
+                }
+                else {
+
+                    String msg;
+                    if(classDAO.saveClass(username, classCode, className, classDescription))
+                        msg = "Successfully saved class(course).";
+                    else
+                        msg = "Problem saving class(course).";
+
+                    request.session().attribute("status_msg", msg);
+
+                    // now redirect back to home
+                    response.redirect("/");
+                }
+            }
+        });
+
+
+
+        // will present the form used to process new blog posts
+        get(new FreemarkerBasedRoute("/newpost", "new_quiz_template.ftl") {
             @Override
             protected void doHandle(Request request, Response response, Writer writer) throws IOException, TemplateException {
 
@@ -233,13 +359,16 @@ public class ProjectController {
                     SimpleHash root = new SimpleHash();
                     root.put("username", username);
 
+                    List<Document> userClasses = classDAO.getAllClassesByTeacher(username);
+                    root.put("userClasses", userClasses);
+
                     template.process(root, writer);
                 }
             }
         });
 
         // handle the new post submission
-        post(new FreemarkerBasedRoute("/newpost", "newpost_template.ftl") {
+        post(new FreemarkerBasedRoute("/newpost", "new_quiz_template.ftl") {
             @Override
             protected void doHandle(Request request, Response response, Writer writer)
                     throws IOException, TemplateException {
@@ -291,9 +420,13 @@ public class ProjectController {
 
                 }
                 else {
+                    Document user = userDAO.getUserInfo(username);
+
                     SimpleHash root = new SimpleHash();
 
                     root.put("username", username);
+                    if(null!=user)
+                        root.put("userType", user.getString("userType"));
 
                     template.process(root, writer);
                 }
@@ -390,7 +523,7 @@ public class ProjectController {
         });
 
         // Show the posts filed under a certain tag
-        get(new FreemarkerBasedRoute("/tag/:thetag", "blog_template.ftl") {
+        get(new FreemarkerBasedRoute("/tag/:thetag", "home.ftl") {
             @Override
             protected void doHandle(Request request, Response response, Writer writer)
                     throws IOException, TemplateException {
@@ -508,16 +641,17 @@ public class ProjectController {
     }
 
     // validates that the registration form has been filled out right and username conforms
-    public boolean validateSignup(String username, String password, String verify, String email,
-                                  HashMap<String, String> errors) {
+    public boolean validateSignup(String username, String password, String verify, String email, String userType, HashMap<String, String> errors) {
         String USER_RE = "^[a-zA-Z0-9_-]{3,20}$";
         String PASS_RE = "^.{3,20}$";
         String EMAIL_RE = "^[\\S]+@[\\S]+\\.[\\S]+$";
+        String TYPE_RE = "^[TS]*$";
 
         errors.put("username_error", "");
         errors.put("password_error", "");
         errors.put("verify_error", "");
         errors.put("email_error", "");
+        errors.put("userType_error", "");
 
         if (!username.matches(USER_RE)) {
             errors.put("username_error", "invalid username. try just letters and numbers");
@@ -542,6 +676,11 @@ public class ProjectController {
             }
         }
 
+        if(null==userType || (!userType.equals("") && !userType.matches(TYPE_RE))) {
+            errors.put("userType_error", "Please select user type");
+            return false;
+        }
+
         return true;
     }
 
@@ -549,5 +688,18 @@ public class ProjectController {
         Configuration retVal = new Configuration();
         retVal.setClassForTemplateLoading(ProjectController.class, "/freemarker");
         return retVal;
+    }
+
+    public String getFlashMessage(Request request, String attribute) {
+        String message = request.session().attribute(attribute);
+        request.session().removeAttribute(attribute);
+        return message;
+    }
+
+    private Document getUser(String username){
+        if(null!=username){
+            return userDAO.getUserInfo(username);
+        }
+        return null;
     }
 }

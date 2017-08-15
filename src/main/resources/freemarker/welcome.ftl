@@ -15,9 +15,18 @@
             <li>
                 <a href="/logout">Logout</a>
             </li>
-            <li>
-                <a href="/newpost">New Post(Quiz)</a>
-            </li>
+            <#if 'T'==userType>
+                <li>
+                    <a href="/newcourse">Register Class (Course)</a>
+                </li>
+                <li>
+                    <a href="/newpost">New Post(Quiz)</a>
+                </li>
+            </#if>
+
+            <!-- TODO: Load Classes here -->
+            <!-- TODO: Load Class Active Quizes -->
+
         </ul>
     </body>
 </html>
