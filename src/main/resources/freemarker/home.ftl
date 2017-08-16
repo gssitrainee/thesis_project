@@ -6,7 +6,7 @@
 <body>
 
 <#if username??>
-    Welcome ${username} <a href="/logout">Logout</a><#if "T" == userType> | <a href="/newcourse">Register Class</a> | <a href="/newpost">New Quiz</a></#if>
+    Welcome ${username} <a href="/logout">Logout</a><#if "T" == userType> | <a href="/newcourse">Register Class</a> | <a href="/newpost">Post a Quiz</a></#if>
     <p>
 <#else>
     Welcome guest <a href="/signup"> Sign up </a> | <a href="/login">Log in</a>

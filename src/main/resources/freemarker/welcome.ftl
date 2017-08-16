@@ -20,7 +20,7 @@
                     <a href="/newcourse">Register Class (Course)</a>
                 </li>
                 <li>
-                    <a href="/newpost">New Post(Quiz)</a>
+                    <a href="/newpost">Post a Quiz</a>
                 </li>
             </#if>
 
