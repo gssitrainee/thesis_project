@@ -39,7 +39,7 @@ public class UserDAO {
     }
 
     // validates that username is unique and insert into db
-    public boolean addUser(String username, String password, String email) {
+    public boolean addUser(String username, String password, String email, String userType) {
 
         String passwordHash = makePasswordHash(password, Integer.toString(random.nextInt()));
 
@@ -52,6 +52,11 @@ public class UserDAO {
             user.append("email", email);
         }
 
+        if (userType != null && !userType.equals("")) {
+            // the selected user type (T or S)
+            user.append("userType", userType);
+        }
+
         try {
             usersCollection.insertOne(user);
             return true;
@@ -59,6 +64,14 @@ public class UserDAO {
             System.out.println("Username already in use: " + username);
             return false;
         }
+    }
+
+    public Document getUserInfo(String username){
+        if(null!=username){
+            return usersCollection.find(Filters.eq("_id", username)).first();
+        }
+
+        return null;
     }
 
     public Document validateLogin(String username, String password) {

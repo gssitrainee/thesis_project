@@ -60,6 +60,19 @@
             ${email_error!""}
           </td>
         </tr>
+
+        <tr>
+          <td class="label">
+            User Type
+          </td>
+          <td>
+              <input type="radio" name="userType" value="T"> Teacher<br>
+              <input type="radio" name="userType" value="S"> Student<br>
+          </td>
+          <td class="error">
+            ${userType_error!""}
+          </td>
+        </tr>
       </table>
 
       <input type="submit">

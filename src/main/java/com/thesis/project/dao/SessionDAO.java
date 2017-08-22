@@ -59,12 +59,9 @@ public class SessionDAO {
 
         // build the BSON object
         Document session = new Document("username", username);
-
         session.append("_id", sessionID);
 
-        sessionsCollection.deleteMany(
-                new Document("username",username));
-
+        sessionsCollection.deleteMany(new Document("username",username));
         sessionsCollection.insertOne(session);
 
         return session.getString("_id");
