@@ -46,14 +46,14 @@ public class PostDAO {
         return postsCollection.find()
                        .sort(Sorts.descending("date"))
                        .limit(limit)
-                       .into(new ArrayList<Document>());
+                       .into(new ArrayList<>());
     }
 
     public List<Document> findByTagDateDescending(final String tag) {
         return postsCollection.find(Filters.eq("tags", tag))
                        .sort(Sorts.descending("date"))
                        .limit(10)
-                       .into(new ArrayList<Document>());
+                       .into(new ArrayList<>());
     }
 
     public String addPost(String title, String body, List tags, String username) {

@@ -34,6 +34,7 @@ import org.bson.Document;
 import spark.Request;
 import spark.Response;
 import spark.Route;
+import spark.Spark;
 
 import javax.servlet.http.Cookie;
 import java.io.IOException;
@@ -61,6 +62,9 @@ public class ProjectController {
     private final SessionDAO sessionDAO;
 
     public static void main(String[] args) throws IOException {
+        //Spark.externalStaticFileLocation("/resources/public");
+        Spark.staticFileLocation("/public");
+
         if (args.length == 0) {
             new ProjectController("mongodb://localhost");
         }
@@ -148,6 +152,21 @@ public class ProjectController {
                 template.process(root, writer);
             }
         });
+
+
+
+        // this is the blog home page
+        get(new FreemarkerBasedRoute("/bs_test", "bs_test.ftl") {
+            @Override
+            public void doHandle(Request request, Response response, Writer writer) throws IOException, TemplateException {
+                SimpleHash root = new SimpleHash();
+                root.put("name", "Borgy Manotoy");
+                template.process(root, writer);
+            }
+        });
+
+
+
 
         // used to display actual blog post detail page
         get(new FreemarkerBasedRoute("/post/:permalink", "entry_template.ftl") {
@@ -384,7 +403,7 @@ public class ProjectController {
                 }
                 else if (title.equals("") || post.equals("")) {
                     // redisplay page with errors
-                    HashMap<String, String> root = new HashMap<String, String>();
+                    HashMap<String, String> root = new HashMap<>();
                     root.put("errors", "post must contain a title and blog entry.");
                     root.put("subject", title);
                     root.put("username", username);
@@ -630,7 +649,7 @@ public class ProjectController {
         String tagArray[] = tags.split(",");
 
         // let's clean it up, removing the empty string and removing dups
-        ArrayList<String> cleaned = new ArrayList<String>();
+        ArrayList<String> cleaned = new ArrayList<>();
         for (String tag : tagArray) {
             if (!tag.equals("") && !cleaned.contains(tag)) {
                 cleaned.add(tag);
@@ -686,7 +705,7 @@ public class ProjectController {
 
     private Configuration createFreemarkerConfiguration() {
         Configuration retVal = new Configuration();
-        retVal.setClassForTemplateLoading(ProjectController.class, "/freemarker");
+        retVal.setClassForTemplateLoading(ProjectController.class, "/templates");
         return retVal;
     }
 
