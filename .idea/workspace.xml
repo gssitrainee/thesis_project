@@ -3,9 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="9f1f1bf7-ea1c-441a-b203-ea7dba3e8566" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/templates/home.ftl" afterPath="$PROJECT_DIR$/src/main/resources/templates/home.ftl" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/templates/login.ftl" afterPath="$PROJECT_DIR$/src/main/resources/templates/login.ftl" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/templates/signup.ftl" afterPath="$PROJECT_DIR$/src/main/resources/templates/signup.ftl" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/templates/welcome.ftl" afterPath="$PROJECT_DIR$/src/main/resources/templates/welcome.ftl" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -52,8 +50,8 @@
       <file leaf-file-name="signup.ftl" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/resources/templates/signup.ftl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="359">
-              <caret line="67" column="42" lean-forward="true" selection-start-line="67" selection-start-column="42" selection-end-line="67" selection-end-column="42" />
+            <state relative-caret-position="972">
+              <caret line="99" column="87" lean-forward="false" selection-start-line="99" selection-start-column="66" selection-end-line="99" selection-end-column="87" />
               <folding>
                 <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#0;n#form#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -65,8 +63,8 @@
       <file leaf-file-name="welcome.ftl" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/resources/templates/welcome.ftl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="414">
-              <caret line="23" column="21" lean-forward="true" selection-start-line="23" selection-start-column="21" selection-end-line="23" selection-end-column="21" />
+            <state relative-caret-position="310">
+              <caret line="52" column="56" lean-forward="false" selection-start-line="52" selection-start-column="56" selection-end-line="52" selection-end-column="56" />
               <folding />
             </state>
           </provider>
@@ -85,8 +83,8 @@
       <file leaf-file-name="bs_test.ftl" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/resources/templates/bs_test.ftl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="162">
-              <caret line="9" column="0" lean-forward="true" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
+            <state relative-caret-position="90">
+              <caret line="59" column="0" lean-forward="false" selection-start-line="59" selection-start-column="0" selection-end-line="71" selection-end-column="10" />
               <folding />
             </state>
           </provider>
@@ -151,6 +149,7 @@
         <option value="$PROJECT_DIR$/src/main/resources/templates/home.ftl" />
         <option value="$PROJECT_DIR$/src/main/resources/templates/login.ftl" />
         <option value="$PROJECT_DIR$/src/main/resources/templates/signup.ftl" />
+        <option value="$PROJECT_DIR$/src/main/resources/templates/welcome.ftl" />
       </list>
     </option>
   </component>
@@ -408,12 +407,20 @@
       <workItem from="1502864864424" duration="54000" />
       <workItem from="1503415921934" duration="900000" />
       <workItem from="1503456070415" duration="5324000" />
-      <workItem from="1503485134440" duration="4563000" />
+      <workItem from="1503485134440" duration="5332000" />
     </task>
+    <task id="LOCAL-00001" summary="Added bootstrap themes in login, signup pages.">
+      <created>1503489894941</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1503489894941</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="25701000" />
+    <option name="totallyTimeSpent" value="26470000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-9" y="29" width="1922" height="1045" extended-state="6" />
@@ -456,6 +463,10 @@
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Added bootstrap themes in login, signup pages." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added bootstrap themes in login, signup pages." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -819,22 +830,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/templates/home.ftl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="10" column="21" lean-forward="false" selection-start-line="10" selection-start-column="21" selection-end-line="10" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/templates/bs_test.ftl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="9" column="0" lean-forward="true" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/thesis/project/controllers/ProjectController.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="837">
@@ -863,10 +858,26 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/templates/home.ftl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="10" column="21" lean-forward="false" selection-start-line="10" selection-start-column="21" selection-end-line="10" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/templates/bs_test.ftl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="59" column="0" lean-forward="false" selection-start-line="59" selection-start-column="0" selection-end-line="71" selection-end-column="10" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/templates/signup.ftl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="359">
-          <caret line="67" column="42" lean-forward="true" selection-start-line="67" selection-start-column="42" selection-end-line="67" selection-end-column="42" />
+        <state relative-caret-position="972">
+          <caret line="99" column="87" lean-forward="false" selection-start-line="99" selection-start-column="66" selection-end-line="99" selection-end-column="87" />
           <folding>
             <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#0;n#form#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -876,8 +887,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/templates/welcome.ftl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="414">
-          <caret line="23" column="21" lean-forward="true" selection-start-line="23" selection-start-column="21" selection-end-line="23" selection-end-column="21" />
+        <state relative-caret-position="310">
+          <caret line="52" column="56" lean-forward="false" selection-start-line="52" selection-start-column="56" selection-end-line="52" selection-end-column="56" />
           <folding />
         </state>
       </provider>
