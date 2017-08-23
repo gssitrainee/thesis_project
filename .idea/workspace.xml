@@ -1,46 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="9f1f1bf7-ea1c-441a-b203-ea7dba3e8566" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/freemarker/course_template.ftl" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/freemarker/entry_template.ftl" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/freemarker/error_template.ftl" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/freemarker/home.ftl" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/freemarker/login.ftl" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/freemarker/new_quiz_template.ftl" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/freemarker/post_not_found.ftl" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/freemarker/signup.ftl" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/freemarker/welcome.ftl" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/resources/freemarker/course_template.ftl" afterPath="$PROJECT_DIR$/src/main/resources/templates/course_template.ftl" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/resources/freemarker/entry_template.ftl" afterPath="$PROJECT_DIR$/src/main/resources/templates/entry_template.ftl" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/resources/freemarker/error_template.ftl" afterPath="$PROJECT_DIR$/src/main/resources/templates/error_template.ftl" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/resources/freemarker/home.ftl" afterPath="$PROJECT_DIR$/src/main/resources/templates/home.ftl" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/resources/freemarker/login.ftl" afterPath="$PROJECT_DIR$/src/main/resources/templates/login.ftl" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/resources/freemarker/new_quiz_template.ftl" afterPath="$PROJECT_DIR$/src/main/resources/templates/new_quiz_template.ftl" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/resources/freemarker/post_not_found.ftl" afterPath="$PROJECT_DIR$/src/main/resources/templates/post_not_found.ftl" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/resources/freemarker/signup.ftl" afterPath="$PROJECT_DIR$/src/main/resources/templates/signup.ftl" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/resources/freemarker/welcome.ftl" afterPath="$PROJECT_DIR$/src/main/resources/templates/welcome.ftl" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/com/thesis/project/controllers/ProjectController$10.class" afterPath="$PROJECT_DIR$/target/classes/com/thesis/project/controllers/ProjectController$10.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/com/thesis/project/controllers/ProjectController$11.class" afterPath="$PROJECT_DIR$/target/classes/com/thesis/project/controllers/ProjectController$11.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/com/thesis/project/controllers/ProjectController$12.class" afterPath="$PROJECT_DIR$/target/classes/com/thesis/project/controllers/ProjectController$12.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/com/thesis/project/controllers/ProjectController$13.class" afterPath="$PROJECT_DIR$/target/classes/com/thesis/project/controllers/ProjectController$13.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/com/thesis/project/controllers/ProjectController$14.class" afterPath="$PROJECT_DIR$/target/classes/com/thesis/project/controllers/ProjectController$14.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/com/thesis/project/controllers/ProjectController$15.class" afterPath="$PROJECT_DIR$/target/classes/com/thesis/project/controllers/ProjectController$15.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/com/thesis/project/controllers/ProjectController$16.class" afterPath="$PROJECT_DIR$/target/classes/com/thesis/project/controllers/ProjectController$16.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/com/thesis/project/controllers/ProjectController$17.class" afterPath="$PROJECT_DIR$/target/classes/com/thesis/project/controllers/ProjectController$17.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/com/thesis/project/controllers/ProjectController$2.class" afterPath="$PROJECT_DIR$/target/classes/com/thesis/project/controllers/ProjectController$2.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/com/thesis/project/controllers/ProjectController$3.class" afterPath="$PROJECT_DIR$/target/classes/com/thesis/project/controllers/ProjectController$3.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/com/thesis/project/controllers/ProjectController$4.class" afterPath="$PROJECT_DIR$/target/classes/com/thesis/project/controllers/ProjectController$4.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/com/thesis/project/controllers/ProjectController$5.class" afterPath="$PROJECT_DIR$/target/classes/com/thesis/project/controllers/ProjectController$5.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/com/thesis/project/controllers/ProjectController$6.class" afterPath="$PROJECT_DIR$/target/classes/com/thesis/project/controllers/ProjectController$6.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/com/thesis/project/controllers/ProjectController$7.class" afterPath="$PROJECT_DIR$/target/classes/com/thesis/project/controllers/ProjectController$7.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/com/thesis/project/controllers/ProjectController$8.class" afterPath="$PROJECT_DIR$/target/classes/com/thesis/project/controllers/ProjectController$8.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/com/thesis/project/controllers/ProjectController$9.class" afterPath="$PROJECT_DIR$/target/classes/com/thesis/project/controllers/ProjectController$9.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/com/thesis/project/controllers/ProjectController.class" afterPath="$PROJECT_DIR$/target/classes/com/thesis/project/controllers/ProjectController.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/thesis/project/controllers/ProjectController.java" afterPath="$PROJECT_DIR$/src/main/java/com/thesis/project/controllers/ProjectController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/thesis/project/dao/PostDAO.java" afterPath="$PROJECT_DIR$/src/main/java/com/thesis/project/dao/PostDAO.java" />
-    </list>
+    <list default="true" id="9f1f1bf7-ea1c-441a-b203-ea7dba3e8566" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -384,12 +345,12 @@
       <workItem from="1502863257238" duration="619000" />
       <workItem from="1502864864424" duration="54000" />
       <workItem from="1503415921934" duration="900000" />
-      <workItem from="1503456070415" duration="4713000" />
+      <workItem from="1503456070415" duration="5324000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="20527000" />
+    <option name="totallyTimeSpent" value="21138000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-9" y="29" width="1922" height="1045" extended-state="6" />
@@ -414,7 +375,7 @@
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32819384" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32819384" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24919957" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32929516" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
