@@ -46,7 +46,7 @@
           <ul class="navbar-nav ml-auto">
             <#if username??>
                 <li class="nav-item">
-                    <a class="nav-link" href="/newcourse">Register Class</a>
+                    <a class="nav-link" href="/newcourse">Class Registration</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/newpost">Post a Quiz</a>
