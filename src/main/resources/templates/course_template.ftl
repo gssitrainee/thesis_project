@@ -104,7 +104,7 @@
                     <div class="form-group">
                         <!-- Button -->
                         <div class="col-md-offset-3 col-md-9">
-                            <input type="submit" id="btn-signup" class="btn btn-info" value="Create Class" />
+                            <input type="submit" id="btn-signup" class="btn btn-info" value="Save Class Details" />
                         </div>
                     </div>
 
