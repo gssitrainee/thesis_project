@@ -22,25 +22,6 @@
             }
         }
 
-/*        div.divContainer {
-            border: 1px solid #ccc;
-            width: 450px;
-            padding: 20px 0px 20px 50px;
-        }
-        p > label {
-            display: inline-block; width: 150px;
-            font-weight: bold;
-        }
-        p > input[type='text'], p > textarea {
-            font-family: "Courier New", Georgia, Serif;
-            width: 200px;
-            padding: 5px;
-        }
-        input[type=submit] {
-            font-family: "Courier New", Georgia, Serif;
-            font-weight: bolder;
-            padding: 5px 20px;
-        }*/
         span.status {
             font-family: "Courier New", Georgia, Serif;
             font-style: italic;
