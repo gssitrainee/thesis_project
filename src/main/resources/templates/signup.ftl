@@ -1,13 +1,9 @@
-<!DOCTYPE html>
+<#import "masterTemplate.ftl" as t>
 
+<!DOCTYPE html>
 <html>
     <head>
-
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <meta name="description" content="">
-        <meta name="author" content="">
-
+        <@t.headerMetaTags />
         <title>Capstone: Sign Up</title>
 
         <!-- Bootstrap core CSS -->
@@ -28,33 +24,32 @@
         </style>
     </head>
 
-  <body>
+    <body>
+        <@t.navigationDiv />
 
-      <!-- Navigation -->
-      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-          <div class="container">
-              <a class="navbar-brand" href="/login">Already a user?</a>
-              <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-                  <span class="navbar-toggler-icon"></span>
-              </button>
-              <div class="collapse navbar-collapse" id="navbarResponsive">
-                  <ul class="navbar-nav ml-auto">
-                      <li class="nav-item">
-                          <a class="nav-link" href="/login">Log in</a>
-                      </li>
-                  </ul>
-              </div>
-          </div>
-      </nav>
-
-      <div id="signupbox" style="margin-top:50px" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+        <div id="signupbox" style="margin-top:50px" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
           <div class="panel panel-info">
               <div class="panel-body" >
                   <form id="signupform" class="form-horizontal" role="form" action="/signup" method="post">
 
-                      <div id="signupalert" style="display:none" class="alert alert-danger">
-                          <p>Error:</p>
-                          <span></span>
+                      <#if signup_error??>
+                          <div id="signupalert" style="display:none" class="alert alert-danger">
+                              <p>Error: <span>${signup_error}</span></p>
+                          </div>
+                      </#if>
+
+                      <div class="form-group has-error has-feedback">
+                          <label for="txtFirstName" class="col-md-3 control-label">First Name</label>
+                          <div class="col-md-9">
+                              <input type="text" id="txtFirstName" class="form-control" name="firstName" placeholder="First Name" />
+                          </div>
+                      </div>
+
+                      <div class="form-group has-error has-feedback">
+                          <label for="txtLastName" class="col-md-3 control-label">Last Name</label>
+                          <div class="col-md-9">
+                              <input type="text" id="txtLastName" class="form-control" name="lastName" placeholder="Last Name" />
+                          </div>
                       </div>
 
                       <div class="form-group has-error has-feedback">
@@ -94,9 +89,6 @@
                       <div class="form-group">
                           <!-- Button -->
                           <div class="col-md-offset-3 col-md-9">
-                              <!--
-                              <button id="btn-signup" type="button" class="btn btn-info"><i class="icon-hand-right"></i> &nbsp Sign Up</button>
-                              -->
                               <input type="submit" id="btn-signup" class="btn btn-info" value="&nbsp Sign Up" />
                           </div>
                       </div>
@@ -106,81 +98,6 @@
           </div>
       </div>
 
-
-<#--
-    Already a user? <a href="/login">Login</a><p>
-    <h2>Signup</h2>
-    <form method="post">
-      <table>
-        <tr>
-          <td class="label">
-            Username
-          </td>
-          <td>
-            <input type="text" name="username" value="${username}">
-          </td>
-          <td class="error">
-              ${username_error!""}
-          </td>
-        </tr>
-        <tr>
-          <td class="label">
-            Password
-          </td>
-          <td>
-              <input type="password" name="password" value="">
-          </td>
-          <td class="error">
-              ${password_error!""}
-          </td>
-        </tr>
-
-        <tr>
-          <td class="label">
-            Verify Password
-          </td>
-          <td>
-              <input type="password" name="verify" value="">
-          </td>
-          <td class="error">
-              ${verify_error!""}
-          </td>
-        </tr>
-
-        <tr>
-          <td class="label">
-            Email (optional)
-          </td>
-          <td>
-            <input type="text" name="email" value="${email}">
-          </td>
-          <td class="error">
-            ${email_error!""}
-          </td>
-        </tr>
-
-        <tr>
-          <td class="label">
-            User Type
-          </td>
-          <td>
-              <input type="radio" name="userType" value="T"> Teacher<br>
-              <input type="radio" name="userType" value="S"> Student<br>
-          </td>
-          <td class="error">
-            ${userType_error!""}
-          </td>
-        </tr>
-      </table>
-
-      <input type="submit">
-    </form>-->
-
-        <!-- Bootstrap core JavaScript -->
-        <script src="js/jquery.min.js"></script>
-        <script src="js/popper.min.js"></script>
-        <script src="js/bootstrap.min.js"></script>
-
+        <@t.bootstrapCoreJS />
     </body>
-
 </html>

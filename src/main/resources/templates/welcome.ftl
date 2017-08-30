@@ -1,3 +1,5 @@
+<#import "masterTemplate.ftl" as t>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -27,48 +29,62 @@
         </style>
     </head>
     <body>
-
         <!-- Navigation -->
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-            <div class="container">
-                <a class="navbar-brand" href="/">Home</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarResponsive">
-                    <ul class="navbar-nav ml-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/logout">Logout</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-
+        <@t.navigationDiv />
 
         <!-- Page Content -->
         <div class="container">
-            <div class="row">
-                <div class="col-lg-12 text-left">
-                    <h1 class="mt-5">Welcome ${username}</h1>
-                    <#if 'T'==userType>
-                        <ul class="list-unstyled">
-                            <li>
-                                <a href="/newcourse">Register Class (Course)</a>
-                            </li>
-                            <li>
-                                <a href="/newpost">Post a Quiz</a>
-                            </li>
-                        </ul>
-                    </#if>
+            <#if 'T'==userType>
+                <div class="row sm-flex-center">
+                    <div class="col-sm-6">
+                        <p>Classes</p>
+                        <div class="list">
+                            <#if userClasses??>
+                                <ul class="list-unstyled">
+                                    <#list userClasses as cls>
+                                        <li><a href="/course?code=${cls["classCode"]}">${cls["className"]}<#if cls["classCode"]??> (${cls["classCode"]})</#if></a></li>
+                                    </#list>
+                                </ul>
+                            </#if>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 pull-right">
+                        <p>Student Registration to Class for Approval</p>
+                        <div class="list">
+                            <ul class="list-unstyled">
+                                <li>Andress Bonifacio </li>
+                                <li>Emilio Aguinaldo </li>
+                                <li>Juan Luna </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            <#else>
+                <div class="row sm-flex-center">
+                    <div class="col-sm-6">
+                        <p>Enrolled Courses (Subjects)</p>
+                        <div class="list">
+                            <ul class="list-unstyled">
+                                <li>Andress Bonifacio </li>
+                                <li>Emilio Aguinaldo </li>
+                                <li>Juan Luna </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 pull-right">
+                        <p>Active Class Quiz</p>
+                        <div class="list">
+                            <ul class="list-unstyled">
+                                <li>Andress Bonifacio </li>
+                                <li>Emilio Aguinaldo </li>
+                                <li>Juan Luna </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </#if>
         </div>
 
-        <!-- Bootstrap core JavaScript -->
-        <script src="js/jquery.min.js"></script>
-        <script src="js/popper.min.js"></script>
-        <script src="js/bootstrap.min.js"></script>
-
+        <@t.bootstrapCoreJS />
     </body>
 </html>

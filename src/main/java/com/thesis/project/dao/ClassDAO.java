@@ -1,5 +1,6 @@
 package com.thesis.project.dao;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
@@ -22,6 +23,20 @@ public class ClassDAO {
     public Document findByClassCode(String classCode) {
         Document docClass = classCollection.find(Filters.eq("classCode", classCode)).first();
         return docClass;
+    }
+
+    public List<Document> findBySearchKey(String searchKey) {
+        if(null!=searchKey && !"".equals(searchKey)){
+            //db.classes.find({ "className": {"$regex": "hello+world", "$options": "i"});
+            BasicDBObject regexQuery = new BasicDBObject();
+            regexQuery.put("className", new BasicDBObject("$regex", searchKey) .append("$options", "i"));
+
+            System.out.println(regexQuery.toString());
+
+            return classCollection.find(regexQuery).into(new ArrayList<>());
+        }
+
+        return null;
     }
 
     public boolean saveClass(String username, String classCode, String className, String classDescription){

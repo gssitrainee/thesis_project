@@ -76,7 +76,7 @@
         <div style="margin-top:50px" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
             <div class="panel panel-info">
                 <div class="panel-body" >
-                    <form id="postquizform" class="form-horizontal" role="form" action="/newpost" method="POST">
+                    <form id="postquizform" class="form-horizontal" role="form" action="/postQuiz" method="POST">
 
                         <div class="form-group has-error has-feedback">
                             <label for="selClass" class="col-md-3 control-label">Class</label>

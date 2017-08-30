@@ -65,6 +65,8 @@
 }
 
 
+
+
 * JSON: Student enrolls to Class (student-enrollment) - [TODO]
 
 {
@@ -226,6 +228,65 @@ db.classes.find({"teacher" : "ejsalipahmad"}).pretty();
         "lastModifiedDate" : ISODate("2017-08-15T18:02:16.860Z")
     }
 ]
+
+* Get list of Classes using a search key.
+Query:
+> db.classes.find({ classCode: { "$regex": "CS", "$options": "i" } }).pretty();
+
+Results:
+[
+    {
+        "_id" : ObjectId("59932c1d6f04075c65f7a425"),
+        "teacher" : "ejsalipahmad",
+        "classCode" : "CS56",
+        "className" : "Software Engineering",
+        "classDescription" : "Introduction to Software Engineering",
+        "creationDate" : ISODate("2017-08-15T17:15:09.339Z"),
+        "lastModifiedDate" : ISODate("2017-08-15T17:15:09.339Z")
+    },
+    {
+        "_id" : ObjectId("59932c846f04075d560e51ee"),
+        "teacher" : "ejsalipahmad",
+        "classCode" : "CS42",
+        "className" : "Multimedia 1",
+        "classDescription" : "Multimedia - 2 Dimension (Animation)",
+        "creationDate" : ISODate("2017-08-15T17:16:52.401Z"),
+        "lastModifiedDate" : ISODate("2017-08-15T18:02:16.860Z")
+    },
+    {
+        "_id" : ObjectId("599331dee59e753e54494623"),
+        "classCode" : "CS44",
+        "teacher" : "ejsalipahmad",
+        "className" : "Compiler",
+        "classDescription" : "Introduction to Compiler Design",
+        "lastModifiedDate" : ISODate("2017-08-15T17:39:42.574Z")
+    },
+    {
+        "_id" : "CS426",
+        "teacher" : "ejsalipahmad",
+        "classCode" : "CS426",
+        "className" : "Graphics Design",
+        "classDescription" : "Introduction to Graphics Design (Scalar &amp; Vector Graphics)",
+        "lastModifiedDate" : ISODate("2017-08-15T17:43:47.101Z")
+    },
+    {
+        "_id" : ObjectId("5993b06fbacca31d27de5f19"),
+        "teacher" : "ejsalipahmad",
+        "classCode" : "CS123",
+        "className" : "Jack n Poy",
+        "classDescription" : "Holy holy hoy",
+        "lastModifiedDate" : ISODate("2017-08-16T02:39:43.336Z")
+    },
+    {
+        "_id" : ObjectId("599d69aec2fc7c1a433f82f5"),
+        "teacher" : "jay_canangga",
+        "classCode" : "CSS123",
+        "className" : "Web Design 01",
+        "classDescription" : "Web Design with CSS3",
+        "lastModifiedDate" : ISODate("2017-08-23T11:40:30.200Z")
+    }
+]
+
 
 * Get list of students registered on a class.
 

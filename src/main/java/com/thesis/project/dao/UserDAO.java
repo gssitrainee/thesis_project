@@ -21,6 +21,7 @@ import com.mongodb.MongoWriteException;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
+import com.thesis.project.model.User;
 import org.bson.Document;
 import sun.misc.BASE64Encoder;
 
@@ -28,6 +29,9 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 public class UserDAO {
@@ -39,13 +43,21 @@ public class UserDAO {
     }
 
     // validates that username is unique and insert into db
-    public boolean addUser(String username, String password, String email, String userType) {
+    public boolean addUser(String username, String password, String firstName, String lastName, String email, String userType) {
 
         String passwordHash = makePasswordHash(password, Integer.toString(random.nextInt()));
 
         Document user = new Document();
 
         user.append("_id", username).append("password", passwordHash);
+
+        if(null!=firstName && !firstName.equals("")){
+            user.append("firstName", firstName);
+        }
+
+        if(null!=lastName && !lastName.equals("")){
+            user.append("lastName", lastName);
+        }
 
         if (email != null && !email.equals("")) {
             // the provided email address
@@ -57,6 +69,8 @@ public class UserDAO {
             user.append("userType", userType);
         }
 
+        user.append("isActive", true);
+
         try {
             usersCollection.insertOne(user);
             return true;
@@ -65,6 +79,40 @@ public class UserDAO {
             return false;
         }
     }
+
+    //TODO: For testing if it will work
+    public boolean deactivateUser(String username){
+        boolean status = false;
+        if(null!=username){
+            Document docClass = new Document();
+            docClass.append("isActive", false);
+            docClass.append("lastModifiedDate", new Date());
+
+            Document docUpdate = new Document("$set", docClass);
+            usersCollection.updateOne(Filters.eq("username", username), docUpdate);
+            return true;
+        }
+        return status;
+    }
+
+    //TODO: Create method of updating user information
+
+
+
+    public List<Document> getTeachers(){
+        //db.users.find({userType: "T"}).pretty();
+        return usersCollection.find(Filters.eq("userType", "T")).into(new ArrayList<>());
+    }
+
+    public List<User> getTeacherAccounts(){
+        //db.users.find({userType: "T"}).pretty();
+        List<User> users = new ArrayList<>();
+        List<Document> lstDocUsers = usersCollection.find(Filters.eq("userType", "T")).into(new ArrayList<>());
+        for(Document d : lstDocUsers)
+            users.add(new User(d));
+        return users;
+    }
+
 
     public Document getUserInfo(String username){
         if(null!=username){
