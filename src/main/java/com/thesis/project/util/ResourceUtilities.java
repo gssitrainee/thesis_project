@@ -1,5 +1,6 @@
 package com.thesis.project.util;
 
+import org.bson.Document;
 import spark.Request;
 
 import javax.servlet.http.Cookie;
@@ -113,5 +114,4 @@ public abstract class ResourceUtilities {
 
         return cleaned;
     }
-
 }

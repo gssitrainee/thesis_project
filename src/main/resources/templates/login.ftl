@@ -36,10 +36,10 @@
                   </div>
 
                   <div style="padding-top:30px" class="panel-body" >
-
+                      <br />
                       <#if login_error??>
                           <div id="login-alert" class="alert alert-danger">
-                              <p>Error: <span>${login_error}</span></p>
+                              <p style="margin-bottom: 0px;"><span>${login_error}</span></p>
                           </div>
                       </#if>
 

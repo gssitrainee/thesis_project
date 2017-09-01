@@ -7,15 +7,21 @@
 [
     {
         "_id" : "jpagduma",
+        "firstName": "John Patrick",
+        "lastName": "Agduma",
         "password" : "BSnvv73vv70+Pe+/ve+/vUDvv71q77+9Z1Pvv73vv70=,-1290928513",
         "email" : "jpagduma@gmail.com",
-        "userType" : "S"
+        "userType" : "S",
+        "classes": [ "cs56_092017", "cs42_092017" ]
     },
     {
         "_id" : "ejsalipahmad",
+        "firstName": "Eric Jose",
+        "lastName": "Salip Ahmad",
         "password" : "77+9Ghjvv73vv73GkO+/vTjvv701aTcI77+9dA==,-2068170197",
         "email" : "ejsalipahmad@gmail.com",
-        "userType" : "T"
+        "userType" : "T",
+        "classes": [ "cs56_062016", "cs56_092017", "cs42_092017" ]
     }
 ]
 

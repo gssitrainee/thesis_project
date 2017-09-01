@@ -1,20 +1,15 @@
 package com.thesis.project.controller;
 
 
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientURI;
+import com.mongodb.*;
 import com.mongodb.client.MongoDatabase;
-import com.thesis.project.dao.ClassDAO;
-import com.thesis.project.dao.PostDAO;
-import com.thesis.project.dao.SessionDAO;
-import com.thesis.project.dao.UserDAO;
+import com.thesis.project.dao.*;
 import com.thesis.project.util.FreeMarkerTemplateEngine;
 import com.thesis.project.util.ResourceUtilities;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.bson.Document;
 import spark.ModelAndView;
 
-import javax.print.Doc;
 import javax.servlet.http.Cookie;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,7 +23,8 @@ import static spark.Spark.post;
 
 public class ProjectController implements Mapper{
 
-    private final ClassDAO classDAO;
+    private final CouseDAO couseDAO;
+    private final CourseEnrollmentDAO courseEnrollmentDAO;
     private final PostDAO postDAO;
     private final UserDAO userDAO;
     private final SessionDAO sessionDAO;
@@ -37,7 +33,8 @@ public class ProjectController implements Mapper{
         final MongoClient mongoClient = new MongoClient(new MongoClientURI(mongoURIString));
         final MongoDatabase projectDatabase = mongoClient.getDatabase("db_capstone");
 
-        classDAO = new ClassDAO(projectDatabase);
+        couseDAO = new CouseDAO(projectDatabase);
+        courseEnrollmentDAO = new CourseEnrollmentDAO(projectDatabase);
         postDAO = new PostDAO(projectDatabase);
         userDAO = new UserDAO(projectDatabase);
         sessionDAO = new SessionDAO(projectDatabase);
@@ -55,6 +52,7 @@ public class ProjectController implements Mapper{
             String sessionId = ResourceUtilities.getSessionCookie(request);
             String username = sessionDAO.findUserNameBySessionId(sessionId);
             attributes.put("sessionId", sessionId);
+            attributes.put("showSignUp", true);
 
             String statusMsg = ResourceUtilities.getFlashMessage(request, "status_msg");
 
@@ -71,7 +69,7 @@ public class ProjectController implements Mapper{
                     attributes.put("userType", user.getString("userType"));
                     attributes.put("displayName", displayName);
                     if("T".equals(user.getString("userType"))){
-                        List<Document> userClasses = classDAO.getAllClassesByTeacher(username);
+                        List<Document> userClasses = couseDAO.getAllClassesByTeacher(username);
                         attributes.put("userClasses", userClasses);
                     }
                     else if("S".equals(user.getString("userType"))){
@@ -240,7 +238,7 @@ public class ProjectController implements Mapper{
                     attributes.put("userType", user.getString("userType"));
 
                     if("T".equals(user.getString("userType"))){
-                        List<Document> userClasses = classDAO.getAllClassesByTeacher(username);
+                        List<Document> userClasses = couseDAO.getAllClassesByTeacher(username);
                         attributes.put("userClasses", userClasses);
                     }
                     else if("S".equals(user.getString("userType"))){
@@ -303,34 +301,38 @@ public class ProjectController implements Mapper{
             String className = StringEscapeUtils.escapeHtml4(request.queryParams("className"));
             String classDescription = StringEscapeUtils.escapeHtml4(request.queryParams("classDescription"));
 
+            Document user = null;
             String sessionId = ResourceUtilities.getSessionCookie(request);
             String username = sessionDAO.findUserNameBySessionId(sessionId);
             attributes.put("sessionId", sessionId);
 
-            if (username == null) {
-                response.redirect("/login");    // only logged in users can post to blog
-            }
-            else if (classCode.equals("") || className.equals("") || classDescription.equals("")) {
-                // redisplay page with errors
-                attributes.put("errors", "Please complete class details.");
-                attributes.put("classCode", classCode);
-                attributes.put("className", className);
-                attributes.put("classDescription", classDescription);
-                attributes.put("username", username);
-            }
-            else {
+            if(null!=username) {
+                user = userDAO.getUserInfo(username);
 
-                String msg;
-                if(classDAO.saveClass(username, classCode, className, classDescription))
-                    msg = "Successfully saved class(course).";
-                else
-                    msg = "Problem saving class(course).";
+                if (classCode.equals("") || className.equals("") || classDescription.equals("")) {
+                    // redisplay page with errors
+                    attributes.put("errors", "Please complete class details.");
+                    attributes.put("classCode", classCode);
+                    attributes.put("className", className);
+                    attributes.put("classDescription", classDescription);
+                    attributes.put("username", username);
+                }
+                else {
+                    String msg;
+                    if(couseDAO.saveClass(username, classCode, className, classDescription, user.getString("firstName") + " " + user.getString("lastName")))
+                        msg = "Successfully saved class(course).";
+                    else
+                        msg = "Problem saving class(course).";
 
-                request.session().attribute("status_msg", msg);
+                    request.session().attribute("status_msg", msg);
 
-                // now redirect back to home
-                response.redirect("/");
+                    // now redirect back to home
+                    response.redirect("/");
+                }
             }
+            else
+                response.redirect("/login");
+
 
             return new ModelAndView(attributes, "course_template.ftl");
         }, new FreeMarkerTemplateEngine());
@@ -356,7 +358,7 @@ public class ProjectController implements Mapper{
             }
 
             if(null!=classCode){
-                Document docClass = classDAO.findByClassCode(classCode);
+                Document docClass = couseDAO.findByClassCode(classCode);
                 if(null!=docClass){
                     String className = docClass.getString("className");
                     String classDescription = docClass.getString("classDescription");
@@ -375,6 +377,142 @@ public class ProjectController implements Mapper{
 
             return new ModelAndView(attributes, "course_template.ftl");
         }, new FreeMarkerTemplateEngine());
+
+
+
+        get("classSearch", (request, response) -> {
+            Map<String, Object> attributes = new HashMap<>();
+
+            Document user = null;
+            String sessionId = ResourceUtilities.getSessionCookie(request);
+            String username = sessionDAO.findUserNameBySessionId(sessionId);
+            attributes.put("sessionId", sessionId);
+
+            if(null!=username)
+                user = userDAO.getUserInfo(username);
+
+            if(null!=user){
+                String displayName = user.getString("firstName") + " " + user.getString("lastName");
+                attributes.put("userType", user.getString("userType"));
+                attributes.put("hdrLink", "");
+                attributes.put("hdrLabel", "Welcome " + displayName);
+            }
+
+            if (username == null) {
+                // looks like a bad request. user is not logged in
+                response.redirect("/login");
+            }
+            else {
+                attributes.put("username", username);
+            }
+
+            return new ModelAndView(attributes, "search_class.ftl");
+        }, new FreeMarkerTemplateEngine());
+
+        post("classSearch",(request, response) -> {
+            Map<String, Object> attributes = new HashMap<>();
+
+            Document user = null;
+            String sessionId = ResourceUtilities.getSessionCookie(request);
+            String username = sessionDAO.findUserNameBySessionId(sessionId);
+            attributes.put("sessionId", sessionId);
+
+            String searchKey = StringEscapeUtils.escapeHtml4(request.queryParams("searchKey"));
+            List<Document> classes = couseDAO.findBySearchKey(searchKey);
+            attributes.put("classes", classes);
+
+            if(null!=username)
+                user = userDAO.getUserInfo(username);
+
+            if(null!=user){
+                String displayName = user.getString("firstName") + " " + user.getString("lastName");
+                attributes.put("userType", user.getString("userType"));
+                attributes.put("hdrLink", "");
+                attributes.put("hdrLabel", "Welcome " + displayName);
+            }
+
+            if (username == null) {
+                // looks like a bad request. user is not logged in
+                response.redirect("/login");
+            }
+            else {
+                attributes.put("username", username);
+            }
+
+            return new ModelAndView(attributes, "search_class.ftl");
+        }, new FreeMarkerTemplateEngine());
+
+/*
+        post("enrollClass", (request, response) -> {
+            Map<String, Object> attributes = new HashMap<>();
+
+            Document user = null;
+            String sessionId = ResourceUtilities.getSessionCookie(request);
+            String username = sessionDAO.findUserNameBySessionId(sessionId);
+            attributes.put("sessionId", sessionId);
+
+            if(null!=username) {
+                user = userDAO.getUserInfo(username);
+
+                if(null!=user){
+                    String statusMsg = "";
+                    boolean allowClassEnrollment = false;
+                    boolean successful = false;
+                    BasicDBList enrolledClasses = (BasicDBList) user.get("classes");
+                    if(null!=enrolledClasses){
+                        System.out.println("there are enrolled classes");
+                        for(Object o : enrolledClasses){
+                            String s = (String) o;
+                            System.out.println("[Class]: " + s);
+                        }
+                    }
+                    else {
+                        System.out.println("student not enrolled in any class.");
+                        allowClassEnrollment = true;
+                    }
+
+                    if(allowClassEnrollment){
+                        String classCode = StringEscapeUtils.escapeHtml4(request.queryParams("cc"));
+                        //TODO: Check if student is currently enrolled in selected class, if not ENROLL to class. Otherwise, return error "Currently Enrolled to Class".
+
+                        System.out.println("[class-code]: " + classCode);
+                        Document course = couseDAO.findByClassCode(classCode);
+                        String teacher = "n/a";
+
+                        if(null!=course) teacher = course.getString("teacher");
+
+                        successful = courseEnrollmentDAO.addCourseEnrollment(username, classCode, teacher);
+
+                        // userDAO.addEnrolledClasses(username, classCode);
+
+                        //Document student = new Document("$set", new Document("classes", ))
+                        //db.users.updateOne({"username": username}, {"$set": {"classes": ["cs123", "cs234"] }})
+
+                        statusMsg = "Class registration submitted. Please wait for teacher's approval.";
+                        //response.redirect("/");
+                    }
+                    else {
+                        statusMsg = "Student is already enrolled to the selected class.";
+
+
+                    }
+
+                    String displayName = user.getString("firstName") + " " + user.getString("lastName");
+                    attributes.put("userType", user.getString("userType"));
+                    attributes.put("hdrLink", "");
+                    attributes.put("hdrLabel", "Welcome " + displayName);
+                    attributes.put("username", username);
+                    attributes.put("statusMsg", statusMsg);
+                    attributes.put("successful", successful);
+                }
+
+            }
+            else
+                response.redirect("/login");
+
+            return new ModelAndView(attributes, "search_class.ftl");
+        }, new FreeMarkerTemplateEngine());
+*/
 
 
         // will present the form used to process new quiz posting
@@ -401,7 +539,7 @@ public class ProjectController implements Mapper{
             }
             else {
                 attributes.put("username", username);
-                List<Document> userClasses = classDAO.getAllClassesByTeacher(username);
+                List<Document> userClasses = couseDAO.getAllClassesByTeacher(username);
                 attributes.put("userClasses", userClasses);
             }
 
@@ -489,4 +627,5 @@ public class ProjectController implements Mapper{
             return new ModelAndView(attributes, "error_template.ftl");
         }, new FreeMarkerTemplateEngine());
     }
+
 }

@@ -17,6 +17,8 @@
 
 package com.thesis.project.dao;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import com.mongodb.MongoWriteException;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -38,8 +40,8 @@ public class UserDAO {
     private final MongoCollection<Document> usersCollection;
     private Random random = new SecureRandom();
 
-    public UserDAO(final MongoDatabase blogDatabase) {
-        usersCollection = blogDatabase.getCollection("users");
+    public UserDAO(final MongoDatabase projectDatabase) {
+        usersCollection = projectDatabase.getCollection("users");
     }
 
     // validates that username is unique and insert into db
@@ -96,12 +98,27 @@ public class UserDAO {
     }
 
     //TODO: Create method of updating user information
+    public boolean addEnrolledClasses(String username, String classCode){
+        if(null!=username && null!=classCode){
+            Document findQuery = new Document("username", username);
+            Document item = new Document("scores", new Document("type","quiz").append("score",99));
 
+            Document updateQuery = new Document("$push", item);
+            usersCollection.updateOne(findQuery, updateQuery);
+            return true;
+        }
+        return false;
+    }
 
 
     public List<Document> getTeachers(){
         //db.users.find({userType: "T"}).pretty();
         return usersCollection.find(Filters.eq("userType", "T")).into(new ArrayList<>());
+    }
+
+    public List<Document> getStudents(){
+        //db.users.find({userType: "T"}).pretty();
+        return usersCollection.find(Filters.eq("userType", "S")).into(new ArrayList<>());
     }
 
     public List<User> getTeacherAccounts(){
@@ -113,6 +130,14 @@ public class UserDAO {
         return users;
     }
 
+    public List<User> getStudentAccounts(){
+        //db.users.find({userType: "T"}).pretty();
+        List<User> users = new ArrayList<>();
+        List<Document> lstDocUsers = usersCollection.find(Filters.eq("userType", "S")).into(new ArrayList<>());
+        for(Document d : lstDocUsers)
+            users.add(new User(d));
+        return users;
+    }
 
     public Document getUserInfo(String username){
         if(null!=username){

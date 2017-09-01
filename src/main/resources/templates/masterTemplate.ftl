@@ -44,7 +44,7 @@
                             </li>
                         <#elseif 'S'==userType>
                             <li class="nav-item">
-                                <a class="nav-link" href="/displayClassSearch">Search for Class</a>
+                                <a class="nav-link" href="/classSearch">Search for Class</a>
                             </li>
                         </#if>
                         <#if sessionId??>

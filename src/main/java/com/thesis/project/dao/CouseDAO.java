@@ -1,5 +1,6 @@
 package com.thesis.project.dao;
 
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -13,11 +14,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class ClassDAO {
+public class CouseDAO {
     private final MongoCollection<Document> classCollection;
 
-    public ClassDAO(final MongoDatabase blogDatabase) {
-        classCollection = blogDatabase.getCollection("classes");
+    public CouseDAO(final MongoDatabase projectDatabase) {
+        classCollection = projectDatabase.getCollection("classes");
     }
 
     public Document findByClassCode(String classCode) {
@@ -27,19 +28,25 @@ public class ClassDAO {
 
     public List<Document> findBySearchKey(String searchKey) {
         if(null!=searchKey && !"".equals(searchKey)){
-            //db.classes.find({ "className": {"$regex": "hello+world", "$options": "i"});
-            BasicDBObject regexQuery = new BasicDBObject();
-            regexQuery.put("className", new BasicDBObject("$regex", searchKey) .append("$options", "i"));
+            //{ "$or": [{ "classCode" : { "$regex" : "ttl" , "$options" : "i"}}, { "className" : { "$regex" : "ttl" , "$options" : "i"}}] }
+            //db.classes.find({ "$or": [{ "classCode" : { "$regex" : "ttl" , "$options" : "i"}}, { "className" : { "$regex" : "ttl" , "$options" : "i"}}] });
+            BasicDBObject regexQuery1 = new BasicDBObject("classCode", new BasicDBObject("$regex", searchKey) .append("$options", "i"));
+            BasicDBObject regexQuery2 = new BasicDBObject("className", new BasicDBObject("$regex", searchKey) .append("$options", "i"));
 
-            System.out.println(regexQuery.toString());
+            BasicDBList regexps = new BasicDBList();
+            regexps.add(regexQuery1);
+            regexps.add(regexQuery2);
 
-            return classCollection.find(regexQuery).into(new ArrayList<>());
+            BasicDBObject query = new BasicDBObject("$or", regexps);
+            System.out.println(query.toString());
+
+            return classCollection.find(query).into(new ArrayList<>());
         }
 
         return null;
     }
 
-    public boolean saveClass(String username, String classCode, String className, String classDescription){
+    public boolean saveClass(String username, String classCode, String className, String classDescription, String instructor){
         if(null!=username && null!=classCode && null!=className){
             ObjectId objId = null;
             Document document = findByClassCode(classCode);
@@ -57,6 +64,8 @@ public class ClassDAO {
             if(null!=classDescription && !"".equals(classDescription)){
                 docClass.append("classDescription", classDescription);
             }
+
+            if(null!=instructor && !"".equals(instructor)) docClass.append("instructor", instructor);
 
             //docClass.append("creationDate", new Date());
             docClass.append("lastModifiedDate", new Date());
