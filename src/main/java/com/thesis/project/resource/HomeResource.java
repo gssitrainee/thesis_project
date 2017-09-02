@@ -3,7 +3,7 @@ package com.thesis.project.resource;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoDatabase;
-import com.thesis.project.dao.CouseDAO;
+import com.thesis.project.dao.CourseDAO;
 import com.thesis.project.dao.PostDAO;
 import com.thesis.project.dao.SessionDAO;
 import com.thesis.project.dao.UserDAO;
@@ -22,7 +22,7 @@ import static spark.Spark.post;
 
 public class HomeResource {
 
-    private final CouseDAO couseDAO;
+    private final CourseDAO courseDAO;
     private final PostDAO postDAO;
     private final UserDAO userDAO;
     private final SessionDAO sessionDAO;
@@ -32,7 +32,7 @@ public class HomeResource {
         final MongoClient mongoClient = new MongoClient(new MongoClientURI(mongoURIString));
         final MongoDatabase blogDatabase = mongoClient.getDatabase("db_capstone");
 
-        couseDAO = new CouseDAO(blogDatabase);
+        courseDAO = new CourseDAO(blogDatabase);
         postDAO = new PostDAO(blogDatabase);
         userDAO = new UserDAO(blogDatabase);
         sessionDAO = new SessionDAO(blogDatabase);

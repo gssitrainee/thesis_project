@@ -20,6 +20,9 @@
                     padding-top: 56px;
                 }
             }
+
+            h4 { padding: 20px 0; }
+
         </style>
     </head>
 
@@ -28,19 +31,72 @@
 
         <!-- Page Content -->
         <div class="container">
-            <div class="row">
-                <div class="col-lg-12 text-left">
-                    <h1 class="mt-5">Capstone Project</h1>
-                    <p class="lead">A Quiz Bank Web Application using Java Spark Framework, Freemarker, MongoDB</p>
-                    <#if userClasses??>
-                        <ul class="list-unstyled">
-                        <#list userClasses as cls>
-                            <li><a href="/course?code=${cls["classCode"]}">${cls["className"]}<#if cls["classCode"]??> (${cls["classCode"]})</#if></a></li>
-                        </#list>
-                        </ul>
-                    </#if>
+            <#if 'T'==userType>
+                <div class="row sm-flex-center">
+                    <div class="col-sm-6">
+                        <h4>Classes</h4>
+                        <div class="list">
+                            <#if userClasses??>
+                                <ul class="list-group">
+                                    <#list userClasses as cls>
+                                        <li class="list-group-item"><a href="/course?code=${cls["classCode"]}">${cls["className"]}<#if cls["classCode"]??> (${cls["classCode"]})</#if></a></li>
+                                    </#list>
+                                </ul>
+                            </#if>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 pull-right">
+                        <h4>Student Registration to Class for Approval</h4>
+                        <table id="tblEnrollmentForApproval" class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>Class</th>
+                                <th>Student</th>
+                                <th>Accept</th>
+                                <th>Deny</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <#if forApproval??>
+                                    <#list forApproval as apv>
+                                    <tr>
+                                        <td>${apv["className"]} (${apv["class"]})</td>
+                                        <td>${apv["studentName"]}</td>
+                                        <td><a href="/approveEnrollment?cc=${apv["class"]}&su=${apv["student"]}" class="btn btn-primary" role="button">OK</a></td>
+                                        <td><a href="/disapproveEnrollment?cc=${apv["class"]}&su=${apv["student"]}" class="btn btn-secondary" role="button">X</a></td>
+                                    </tr>
+                                    </#list>
+                                <#else>
+                                <td colspan="4">No Data Available</td>
+                                </#if>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
+            <#else>
+                <div class="row sm-flex-center">
+                    <div class="col-sm-6">
+                        <p>Enrolled Courses (Subjects)</p>
+                        <div class="list">
+                            <ul class="list-unstyled">
+                                <li>Andress Bonifacio </li>
+                                <li>Emilio Aguinaldo </li>
+                                <li>Juan Luna </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 pull-right">
+                        <p>Active Class Quiz</p>
+                        <div class="list">
+                            <ul class="list-unstyled">
+                                <li>Andress Bonifacio </li>
+                                <li>Emilio Aguinaldo </li>
+                                <li>Juan Luna </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </#if>
         </div>
 
         <@t.bootstrapCoreJS />

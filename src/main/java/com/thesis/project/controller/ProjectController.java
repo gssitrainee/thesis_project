@@ -23,7 +23,7 @@ import static spark.Spark.post;
 
 public class ProjectController implements Mapper{
 
-    private final CouseDAO couseDAO;
+    private final CourseDAO courseDAO;
     private final CourseEnrollmentDAO courseEnrollmentDAO;
     private final PostDAO postDAO;
     private final UserDAO userDAO;
@@ -33,7 +33,7 @@ public class ProjectController implements Mapper{
         final MongoClient mongoClient = new MongoClient(new MongoClientURI(mongoURIString));
         final MongoDatabase projectDatabase = mongoClient.getDatabase("db_capstone");
 
-        couseDAO = new CouseDAO(projectDatabase);
+        courseDAO = new CourseDAO(projectDatabase);
         courseEnrollmentDAO = new CourseEnrollmentDAO(projectDatabase);
         postDAO = new PostDAO(projectDatabase);
         userDAO = new UserDAO(projectDatabase);
@@ -69,8 +69,11 @@ public class ProjectController implements Mapper{
                     attributes.put("userType", user.getString("userType"));
                     attributes.put("displayName", displayName);
                     if("T".equals(user.getString("userType"))){
-                        List<Document> userClasses = couseDAO.getAllClassesByTeacher(username);
+                        List<Document> userClasses = courseDAO.getAllClassesByTeacher(username);
                         attributes.put("userClasses", userClasses);
+
+                        List<Document> forApproval = courseEnrollmentDAO.getCourseRegistrationListForTeacher(username);
+                        if(null!=forApproval && 0 < forApproval.size()) attributes.put("forApproval", forApproval);
                     }
                     else if("S".equals(user.getString("userType"))){
                         //TODO: Add List of Class enrolled.
@@ -237,9 +240,25 @@ public class ProjectController implements Mapper{
                     attributes.put("hdrLabel", "Welcome " + displayName);
                     attributes.put("userType", user.getString("userType"));
 
+                    BasicDBList classes = (BasicDBList) user.get("classes");
+                    if(null!=classes){
+                        System.out.println("has classes data");
+                        for(Object o : classes){
+                            String s = (String) o;
+                            System.out.println("[Class]: " + s);
+                        }
+                    }
+                    else {
+                        System.out.println("there are no class data");
+                    }
+
+
                     if("T".equals(user.getString("userType"))){
-                        List<Document> userClasses = couseDAO.getAllClassesByTeacher(username);
+                        List<Document> userClasses = courseDAO.getAllClassesByTeacher(username);
                         attributes.put("userClasses", userClasses);
+
+                        List<Document> forApproval = courseEnrollmentDAO.getCourseRegistrationListForTeacher(username);
+                        if(null!=forApproval && 0 < forApproval.size()) attributes.put("forApproval", forApproval);
                     }
                     else if("S".equals(user.getString("userType"))){
                         //TODO: Add List of Class enrolled.
@@ -319,7 +338,7 @@ public class ProjectController implements Mapper{
                 }
                 else {
                     String msg;
-                    if(couseDAO.saveClass(username, classCode, className, classDescription, user.getString("firstName") + " " + user.getString("lastName")))
+                    if(courseDAO.saveClass(username, classCode, className, classDescription, user.getString("firstName") + " " + user.getString("lastName")))
                         msg = "Successfully saved class(course).";
                     else
                         msg = "Problem saving class(course).";
@@ -353,12 +372,13 @@ public class ProjectController implements Mapper{
 
             if(null!=user){
                 String displayName = user.getString("firstName") + " " + user.getString("lastName");
+                attributes.put("userType", user.getString("userType"));
                 attributes.put("hdrLink", "");
                 attributes.put("hdrLabel", "Welcome " + displayName);
             }
 
             if(null!=classCode){
-                Document docClass = couseDAO.findByClassCode(classCode);
+                Document docClass = courseDAO.findByClassCode(classCode);
                 if(null!=docClass){
                     String className = docClass.getString("className");
                     String classDescription = docClass.getString("classDescription");
@@ -367,6 +387,9 @@ public class ProjectController implements Mapper{
                     attributes.put("className", className);
                     attributes.put("classDescription", classDescription);
                     attributes.put("username", username);
+
+                    List<Document> forApproval = courseEnrollmentDAO.getCourseRegistrationList(classCode);
+                    if(null!=forApproval && 0 < forApproval.size()) attributes.put("forApproval", forApproval);
                 }
                 else {
                     attributes.put("errors", "Class not found!");
@@ -418,7 +441,7 @@ public class ProjectController implements Mapper{
             attributes.put("sessionId", sessionId);
 
             String searchKey = StringEscapeUtils.escapeHtml4(request.queryParams("searchKey"));
-            List<Document> classes = couseDAO.findBySearchKey(searchKey);
+            List<Document> classes = courseDAO.findBySearchKey(searchKey);
             attributes.put("classes", classes);
 
             if(null!=username)
@@ -442,77 +465,6 @@ public class ProjectController implements Mapper{
             return new ModelAndView(attributes, "search_class.ftl");
         }, new FreeMarkerTemplateEngine());
 
-/*
-        post("enrollClass", (request, response) -> {
-            Map<String, Object> attributes = new HashMap<>();
-
-            Document user = null;
-            String sessionId = ResourceUtilities.getSessionCookie(request);
-            String username = sessionDAO.findUserNameBySessionId(sessionId);
-            attributes.put("sessionId", sessionId);
-
-            if(null!=username) {
-                user = userDAO.getUserInfo(username);
-
-                if(null!=user){
-                    String statusMsg = "";
-                    boolean allowClassEnrollment = false;
-                    boolean successful = false;
-                    BasicDBList enrolledClasses = (BasicDBList) user.get("classes");
-                    if(null!=enrolledClasses){
-                        System.out.println("there are enrolled classes");
-                        for(Object o : enrolledClasses){
-                            String s = (String) o;
-                            System.out.println("[Class]: " + s);
-                        }
-                    }
-                    else {
-                        System.out.println("student not enrolled in any class.");
-                        allowClassEnrollment = true;
-                    }
-
-                    if(allowClassEnrollment){
-                        String classCode = StringEscapeUtils.escapeHtml4(request.queryParams("cc"));
-                        //TODO: Check if student is currently enrolled in selected class, if not ENROLL to class. Otherwise, return error "Currently Enrolled to Class".
-
-                        System.out.println("[class-code]: " + classCode);
-                        Document course = couseDAO.findByClassCode(classCode);
-                        String teacher = "n/a";
-
-                        if(null!=course) teacher = course.getString("teacher");
-
-                        successful = courseEnrollmentDAO.addCourseEnrollment(username, classCode, teacher);
-
-                        // userDAO.addEnrolledClasses(username, classCode);
-
-                        //Document student = new Document("$set", new Document("classes", ))
-                        //db.users.updateOne({"username": username}, {"$set": {"classes": ["cs123", "cs234"] }})
-
-                        statusMsg = "Class registration submitted. Please wait for teacher's approval.";
-                        //response.redirect("/");
-                    }
-                    else {
-                        statusMsg = "Student is already enrolled to the selected class.";
-
-
-                    }
-
-                    String displayName = user.getString("firstName") + " " + user.getString("lastName");
-                    attributes.put("userType", user.getString("userType"));
-                    attributes.put("hdrLink", "");
-                    attributes.put("hdrLabel", "Welcome " + displayName);
-                    attributes.put("username", username);
-                    attributes.put("statusMsg", statusMsg);
-                    attributes.put("successful", successful);
-                }
-
-            }
-            else
-                response.redirect("/login");
-
-            return new ModelAndView(attributes, "search_class.ftl");
-        }, new FreeMarkerTemplateEngine());
-*/
 
 
         // will present the form used to process new quiz posting
@@ -539,7 +491,7 @@ public class ProjectController implements Mapper{
             }
             else {
                 attributes.put("username", username);
-                List<Document> userClasses = couseDAO.getAllClassesByTeacher(username);
+                List<Document> userClasses = courseDAO.getAllClassesByTeacher(username);
                 attributes.put("userClasses", userClasses);
             }
 

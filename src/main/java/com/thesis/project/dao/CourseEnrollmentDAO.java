@@ -21,10 +21,13 @@ public class CourseEnrollmentDAO {
         courseEnrollmentCollection = projectDatabase.getCollection("course_enrollment");
     }
 
-    public boolean addCourseEnrollment(String username, String classCode, String teacher) {
+    public boolean addCourseEnrollment(String username, String studentName, String classCode, String className, String teacher, String teacherName) {
         Document enrollment = new Document("student", username);
+        enrollment.append("studentName", studentName);
         enrollment.append("class", classCode);
+        enrollment.append("className", className);
         enrollment.append("teacher", teacher);
+        enrollment.append("teacherName", teacherName);
         enrollment.append("registrationDate", new Date());
         enrollment.append("status", ENROLLMENT_STATUS_OPEN);
 
@@ -40,6 +43,24 @@ public class CourseEnrollmentDAO {
         if(null!=classCourse){
             return courseEnrollmentCollection.find(Filters.eq("class", classCourse))
                     .sort(Sorts.ascending("class"))
+                    .into(new ArrayList<>());
+        }
+        return null;
+    }
+
+    public List<Document> getCourseRegistrationListForTeacher(String username) {
+        if(null!=username){
+            return courseEnrollmentCollection.find(Filters.eq("teacher", username))
+                    .sort(Sorts.ascending("class"))
+                    .into(new ArrayList<>());
+        }
+        return null;
+    }
+
+    public List<Document> getCourseRegistrationListForTeacherAndClass(String username, String classCourse) {
+        if(null!=username && null!=classCourse){
+            return courseEnrollmentCollection.find(Filters.and(Filters.eq("teacher", username), Filters.eq("class", classCourse)))
+                    .sort(Sorts.ascending("registrationDate"))
                     .into(new ArrayList<>());
         }
         return null;

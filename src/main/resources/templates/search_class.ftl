@@ -110,7 +110,6 @@
                 });
 
                 initializeTable();
-                displayStatusMessage("Kalami i iyot");
             });
 
             var initializeTable = function () {

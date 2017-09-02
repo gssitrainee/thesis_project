@@ -18,7 +18,7 @@ import static spark.Spark.post;
 
 public class ProjectRestController implements Mapper {
 
-    private final CouseDAO couseDAO;
+    private final CourseDAO courseDAO;
     private final CourseEnrollmentDAO courseEnrollmentDAO;
     private final PostDAO postDAO;
     private final UserDAO userDAO;
@@ -28,7 +28,7 @@ public class ProjectRestController implements Mapper {
         final MongoClient mongoClient = new MongoClient(new MongoClientURI(mongoURIString));
         final MongoDatabase projectDatabase = mongoClient.getDatabase("db_capstone");
 
-        couseDAO = new CouseDAO(projectDatabase);
+        courseDAO = new CourseDAO(projectDatabase);
         courseEnrollmentDAO = new CourseEnrollmentDAO(projectDatabase);
         postDAO = new PostDAO(projectDatabase);
         userDAO = new UserDAO(projectDatabase);
@@ -46,7 +46,7 @@ public class ProjectRestController implements Mapper {
 
         get("/searchCourse", (request, response) -> {
             String searchKey = request.queryParams("searchKey");
-            return couseDAO.findBySearchKey(searchKey);
+            return courseDAO.findBySearchKey(searchKey);
         }, json());
 
         get("/courseRegistrations", (request, response) -> {
@@ -64,6 +64,7 @@ public class ProjectRestController implements Mapper {
                 Document user = userDAO.getUserInfo(username);
 
                 if(null!=user){
+                    String studentName = user.getString("firstName") + " " + user.getString("lastName");
                     boolean allowClassEnrollment = false;
                     BasicDBList enrolledClasses = (BasicDBList) user.get("classes");
                     if(null!=enrolledClasses){
@@ -83,12 +84,12 @@ public class ProjectRestController implements Mapper {
                         //TODO: Check if student is currently enrolled in selected class, if not ENROLL to class. Otherwise, return error "Currently Enrolled to Class".
 
                         System.out.println("[class-code]: " + classCode);
-                        Document course = couseDAO.findByClassCode(classCode);
+                        Document course = courseDAO.findByClassCode(classCode);
                         String teacher = "n/a";
 
                         if(null!=course) teacher = course.getString("teacher");
 
-                        courseEnrollmentDAO.addCourseEnrollment(username, classCode, teacher);
+                        courseEnrollmentDAO.addCourseEnrollment(username, studentName, classCode, course.getString("className"), teacher, course.getString("instructor"));
 
                         // userDAO.addEnrolledClasses(username, classCode);
 

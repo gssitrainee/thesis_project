@@ -14,10 +14,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class CouseDAO {
+public class CourseDAO {
     private final MongoCollection<Document> classCollection;
 
-    public CouseDAO(final MongoDatabase projectDatabase) {
+    public CourseDAO(final MongoDatabase projectDatabase) {
         classCollection = projectDatabase.getCollection("classes");
     }
 
