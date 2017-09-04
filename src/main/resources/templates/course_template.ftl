@@ -21,6 +21,12 @@
 
             h4 { padding: 20px 0; }
 
+            .top-space { margin-top: 30px; }
+
+            .column-separator { border-right: 1px solid #eee; }
+            input[type='text'] { width: 91.5%; }
+            textarea { width: 91.5%; }
+
             span.status {
                 font-family: "Courier New", Georgia, Serif;
                 font-style: italic;
@@ -35,31 +41,31 @@
         <@t.navigationDiv />
 
         <div class="container">
-            <div class="row sm-flex-center">
-                <div class="col-sm-4">
+            <div class="row sm-flex-center top-space">
+                <div class="col-sm-4 column-separator">
                     <div class="panel panel-info">
                         <h4>Course Details</h4>
                         <div class="panel-body" >
                             <form id="saveclassform" class="form-horizontal" role="form" action="/saveCourseDetails" method="POST">
 
                                 <div class="form-group has-error has-feedback">
-                                    <label for="txtClassCode" class="col-md-6 control-label">Class Code</label>
-                                    <div class="col-md-9">
+                                    <label for="txtClassCode" class="control-label">Class Code</label>
+                                    <div>
                                         <input type="text" id="txtClassCode" class="form-control" name="classCode" value="${classCode!""}" placeholder="Class or Course Code" title="Enter Class or Course Code" />
                                     </div>
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="txtClassName" class="col-md-6 control-label">Class Name</label>
-                                    <div class="col-md-9">
+                                    <label for="txtClassName" class="control-label">Class Name</label>
+                                    <div>
                                         <input type="text" class="form-control" id="txtClassName" name="className" value="${className!""}" placeholder="Class or Course Name" title="Enter Class or Course Name" />
                                     </div>
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="txtClassDescription" class="col-md-6 control-label">Class Description</label>
-                                    <div class="col-md-9">
-                                        <textarea class="form-control" id="txtClassDescription" name="classDescription"  placeholder="Class or Course Description" title="Enter Class or Course Description" cols="30" rows="3">${classDescription!""}</textarea>
+                                    <label for="txtClassDescription" class="control-label">Class Description</label>
+                                    <div>
+                                        <textarea class="form-control" id="txtClassDescription" name="classDescription" placeholder="Class or Course Description" title="Enter Class or Course Description" cols="30" rows="3" style="width: 91.5%">${classDescription!""}</textarea>
                                     </div>
                                 </div>
 
@@ -98,6 +104,36 @@
                             <#else>
                                 <td colspan="4">No Data Available</td>
                             </#if>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <hr />
+
+            <div class="row top-space">
+                <div class="col-sm-12">
+                    <h4>Class List</h4>
+                    <table id="tblClassList" class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Email Address</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <#if classList??>
+                            <#list classList as student>
+                            <tr>
+                                <td>${student["firstName"]}</td>
+                                <td>${student["lastName"]}</td>
+                                <td>${student["email"]}</td>
+                            </tr>
+                            </#list>
+                        <#else>
+                        <td colspan="4">No Data Available</td>
+                        </#if>
                         </tbody>
                     </table>
                 </div>

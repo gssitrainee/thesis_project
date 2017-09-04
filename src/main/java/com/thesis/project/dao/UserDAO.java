@@ -128,6 +128,12 @@ public class UserDAO {
         return usersCollection.find(eq("userType", "S")).into(new ArrayList<>());
     }
 
+    public List<Document> getClassStudents(String classCode){
+        //db.users.find({"userType":"S","classes.code": "CS21"}).pretty();
+        return usersCollection.find(and(eq("userType", "S"), eq("classes.code", classCode))).into(new ArrayList<>());
+    }
+
+
     public List<User> getTeacherAccounts(){
         //db.users.find({userType: "T"}).pretty();
         List<User> users = new ArrayList<>();

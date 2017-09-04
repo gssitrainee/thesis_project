@@ -31,7 +31,7 @@
         <@t.navigationDiv />
 
         <!-- Page Content -->
-        <div class="container">
+        <div id="divMainContainer" class="container">
             <#if userType?? && 'T'==userType>
                 <div class="row sm-flex-center">
                     <div class="col-sm-4">
@@ -40,7 +40,7 @@
                             <#if userClasses??>
                                 <ul class="list-group">
                                     <#list userClasses as cls>
-                                        <li class="list-group-item"><a href="/course?code=${cls["classCode"]}">${cls["className"]}<#if cls["classCode"]??> (${cls["classCode"]})</#if></a></li>
+                                        <li class="list-group-item"><a href="/course?code=${cls["code"]}">${cls["name"]}<#if cls["code"]??> (${cls["code"]})</#if></a></li>
                                     </#list>
                                 </ul>
                             </#if>
@@ -91,10 +91,10 @@
                     <div class="col-sm-6 pull-right">
                         <p>Active Class Quiz</p>
                         <div class="list">
-                            <ul class="list-unstyled">
-                                <li>Andress Bonifacio </li>
-                                <li>Emilio Aguinaldo </li>
-                                <li>Juan Luna </li>
+                            <ul class="list-group">
+                                <li class="list-group-item">(CS21) Quiz 01: Data Types</li>
+                                <li class="list-group-item">(MATH01) Quiz 02: Basic Arithmetic</li>
+                                <li class="list-group-item">(CS56) Quiz 04: File Systems</li>
                             </ul>
                         </div>
                     </div>
