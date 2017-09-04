@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.mongodb.client.model.Filters.eq;
+
 public class CourseDAO {
     private final MongoCollection<Document> classCollection;
 
@@ -22,7 +24,7 @@ public class CourseDAO {
     }
 
     public Document findByClassCode(String classCode) {
-        Document docClass = classCollection.find(Filters.eq("classCode", classCode)).first();
+        Document docClass = classCollection.find(eq("classCode", classCode)).first();
         return docClass;
     }
 
@@ -76,7 +78,7 @@ public class CourseDAO {
                 UpdateOptions options = new UpdateOptions();
                 options.upsert(true);
 
-                classCollection.updateOne(Filters.eq("_id", objId), docUpdate, options);
+                classCollection.updateOne(eq("_id", objId), docUpdate, options);
 
                 //classCollection.insertOne(docClass);
                 System.out.println("Saving class(course): " + docClass.toJson());
@@ -101,7 +103,7 @@ public class CourseDAO {
 
                 docClass.append("lastModifiedDate", new Date());
 
-                classCollection.updateOne(Filters.eq("classCode", classCode), docClass);
+                classCollection.updateOne(eq("classCode", classCode), docClass);
                 System.out.println("Update class(course): " + classCode);
                 return true;
             } catch (Exception e) {
@@ -116,7 +118,7 @@ public class CourseDAO {
     public boolean removeClass(String classCode){
         if(null!=classCode && !"".equals(classCode.trim())){
             try {
-                classCollection.deleteOne(Filters.eq("classCode", classCode));
+                classCollection.deleteOne(eq("classCode", classCode));
                 System.out.println("Unregistering class(course): " + classCode);
                 return true;
             } catch (Exception e) {
@@ -130,7 +132,7 @@ public class CourseDAO {
 
     public List<Document> getAllClassesByTeacher(String username){
         if(null!=username){
-            return classCollection.find(Filters.eq("teacher", username))
+            return classCollection.find(eq("teacher", username))
                     .sort(Sorts.ascending("classCode"))
                     .into(new ArrayList<>());
         }

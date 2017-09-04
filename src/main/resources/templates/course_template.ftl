@@ -36,7 +36,7 @@
 
         <div class="container">
             <div class="row sm-flex-center">
-                <div class="col-sm-6">
+                <div class="col-sm-4">
                     <div class="panel panel-info">
                         <h4>Course Details</h4>
                         <div class="panel-body" >
@@ -74,7 +74,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-6 pull-right">
+                <div class="col-sm-8 pull-right">
                     <h4>Student Registration to Class for Approval</h4>
                     <table id="tblEnrollmentForApproval" class="table table-hover">
                         <thead>
@@ -88,12 +88,12 @@
                         <tbody>
                             <#if forApproval??>
                                 <#list forApproval as apv>
-                                <tr>
-                                    <td>${apv["className"]} (${apv["class"]})</td>
-                                    <td>${apv["studentName"]}</td>
-                                    <td><a href="/approveEnrollment?cc=${apv["class"]}&su=${apv["student"]}" class="btn btn-primary" role="button">OK</a></td>
-                                    <td><a href="/disapproveEnrollment?cc=${apv["class"]}&su=${apv["student"]}" class="btn btn-secondary" role="button">X</a></td>
-                                </tr>
+                                    <tr>
+                                        <td>${apv["className"]} (${apv["class"]})</td>
+                                        <td>${apv["studentName"]}</td>
+                                        <td><a href="/approveEnrollment?cc=${apv["class"]}&su=${apv["student"]}" class="btn btn-primary" role="button">Approve</a></td>
+                                        <td><a href="/disapproveEnrollment?cc=${apv["class"]}&su=${apv["student"]}" class="btn btn-secondary" role="button">Deny</a></td>
+                                    </tr>
                                 </#list>
                             <#else>
                                 <td colspan="4">No Data Available</td>

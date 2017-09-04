@@ -9,7 +9,7 @@
 
         <!-- Bootstrap core CSS -->
         <link href="css/bootstrap.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="css/font-awesome-4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/font-awesome.min.css">
 
         <!-- Custom styles for this template -->
         <style>
@@ -85,6 +85,7 @@
         </div>
 
         <@t.bootstrapCoreJS />
+
         <script>
             $(document).ready(function(){
                 $('#formClassSearch').on("submit", function(){
@@ -120,7 +121,7 @@
             var submitClassEnrollment = function (classCode) {
                 var my_url = "/enrollClass?cc="+classCode;
                 $.post(my_url, function(msg){
-                    alert(msg);
+                    bootbox.alert(msg);
                     initializeTable();
                 });
             };

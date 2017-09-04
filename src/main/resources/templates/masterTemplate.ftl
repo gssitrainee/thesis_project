@@ -9,6 +9,7 @@
     <!-- Bootstrap core JavaScript -->
     <script src="js/jquery.min.js"></script>
     <script src="js/popper.min.js"></script>
+    <script src="js/bootbox.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
 </#macro>
 
@@ -21,7 +22,7 @@
         <div class="container">
 
             <#if username??>
-                <a class="navbar-brand" href="/${hdrLink}">${hdrLabel}</a>
+                <a class="navbar-brand" href="/${hdrLink!"login"}">${hdrLabel!"Already a user?"}</a>
             <#else>
                 <a class="navbar-brand" href="/login">Already a user?</a>
             </#if>
@@ -37,7 +38,7 @@
                                 <a class="nav-link" href="/newCourse">Class Registration</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="/newCourse">Approvals</a>
+                                <a class="nav-link" href="/approvals">Approvals</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="/postQuiz">Post a Quiz</a>
@@ -112,6 +113,7 @@
 <!-- Bootstrap core JavaScript -->
 <script src="js/jquery.min.js"></script>
 <script src="js/popper.min.js"></script>
+<script src="js/bootbox.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 
 </body>

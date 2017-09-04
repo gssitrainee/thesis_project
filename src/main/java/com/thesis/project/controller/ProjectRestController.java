@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import org.bson.Document;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import static com.thesis.project.util.JsonUtil.json;
 import static spark.Spark.after;
@@ -50,8 +51,19 @@ public class ProjectRestController implements Mapper {
         }, json());
 
         get("/courseRegistrations", (request, response) -> {
-            String classCode = request.queryParams("classCode");
-            return courseEnrollmentDAO.getCourseRegistrationList(classCode);
+            String sessionId = ResourceUtilities.getSessionCookie(request);
+            String usr = sessionDAO.findUserNameBySessionId(sessionId);
+
+            String username = request.queryParams("su");
+            String classCode = request.queryParams("cc");
+
+            if(null!=username && null!=classCode)
+                return courseEnrollmentDAO.getCourseRegistrationListForTeacherAndClass(username, classCode);
+            else if(null!=classCode)
+                return courseEnrollmentDAO.getCourseRegistrationList(classCode);
+            else {
+                return courseEnrollmentDAO.getCourseRegistrationListForTeacher(usr);
+            }
         }, json());
 
         post("/enrollClass", (request, response) -> {
@@ -66,12 +78,11 @@ public class ProjectRestController implements Mapper {
                 if(null!=user){
                     String studentName = user.getString("firstName") + " " + user.getString("lastName");
                     boolean allowClassEnrollment = false;
-                    BasicDBList enrolledClasses = (BasicDBList) user.get("classes");
+                    ArrayList enrolledClasses =  (ArrayList) user.get("classes");
                     if(null!=enrolledClasses){
                         System.out.println("there are enrolled classes");
                         for(Object o : enrolledClasses){
-                            String s = (String) o;
-                            System.out.println("[Class]: " + s);
+                            System.out.println("[Class]: " + o.toString());
                         }
                     }
                     else {
@@ -91,11 +102,6 @@ public class ProjectRestController implements Mapper {
 
                         courseEnrollmentDAO.addCourseEnrollment(username, studentName, classCode, course.getString("className"), teacher, course.getString("instructor"));
 
-                        // userDAO.addEnrolledClasses(username, classCode);
-
-                        //Document student = new Document("$set", new Document("classes", ))
-                        //db.users.updateOne({"username": username}, {"$set": {"classes": ["cs123", "cs234"] }})
-
                         statusMsg = "Class registration submitted. Please wait for teacher s approval.";
                     }
                     else {
@@ -109,6 +115,57 @@ public class ProjectRestController implements Mapper {
 
             return statusMsg;
         }, json());
+
+        post("/approveEnrollment", (request, response) -> {
+            System.out.println("\nInside approveEnrollment\n");
+
+
+            String statusMsg = "";
+            String sessionId = ResourceUtilities.getSessionCookie(request);
+            String username = sessionDAO.findUserNameBySessionId(sessionId);
+
+            if(null!=username){
+                String student = StringEscapeUtils.escapeHtml4(request.queryParams("su"));
+                String classCode = StringEscapeUtils.escapeHtml4(request.queryParams("cc"));
+
+                boolean success = false;
+                if(null!=student && null!=classCode){
+                    Document course = courseDAO.findByClassCode(classCode);
+                    System.out.println("[student]: " + student);
+                    System.out.println("[classCode]: " + classCode);
+
+                    success = userDAO.addUserClasses(student, course.getString("classCode"), course.getString("className")) && courseEnrollmentDAO.removeCourseEnrollment(classCode, student);
+                }
+
+                if(success)
+                    statusMsg = "Student Class Registration Approved.";
+                else
+                    statusMsg = "Unable to process student registration.";
+            }
+            else
+                response.redirect("/login");
+
+            return statusMsg;
+        }, json());
+
+        post("/denyEnrollment", (request, response) -> {
+            String student = StringEscapeUtils.escapeHtml4(request.queryParams("su"));
+            String classCode = StringEscapeUtils.escapeHtml4(request.queryParams("cc"));
+
+            boolean success = false;
+            if(null!=student && null!=classCode){
+                //Remove student class registration
+                success = courseEnrollmentDAO.removeCourseEnrollment(classCode, student);
+            }
+
+            if(success)
+                return "Student Class Registration Denied.";
+            else
+                return "Unable to process student registration.";
+
+        }, json());
+
+
 
 /*
         after((request, response) -> {

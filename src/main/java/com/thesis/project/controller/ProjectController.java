@@ -240,22 +240,22 @@ public class ProjectController implements Mapper{
                     attributes.put("hdrLabel", "Welcome " + displayName);
                     attributes.put("userType", user.getString("userType"));
 
-                    BasicDBList classes = (BasicDBList) user.get("classes");
-                    if(null!=classes){
+                    ArrayList<Document> userClasses =  (ArrayList) user.get("classes");
+                    if(null!=userClasses){
                         System.out.println("has classes data");
-                        for(Object o : classes){
-                            String s = (String) o;
-                            System.out.println("[Class]: " + s);
+                        for(Object o : userClasses){
+                            System.out.println("[Class]: " + o.toString());
                         }
                     }
                     else {
                         System.out.println("there are no class data");
                     }
 
+                    attributes.put("userClasses", userClasses);
 
                     if("T".equals(user.getString("userType"))){
-                        List<Document> userClasses = courseDAO.getAllClassesByTeacher(username);
-                        attributes.put("userClasses", userClasses);
+                        //List<Document> userClasses = courseDAO.getAllClassesByTeacher(username);
+                        //attributes.put("userClasses", userClasses);
 
                         List<Document> forApproval = courseEnrollmentDAO.getCourseRegistrationListForTeacher(username);
                         if(null!=forApproval && 0 < forApproval.size()) attributes.put("forApproval", forApproval);
@@ -270,6 +270,36 @@ public class ProjectController implements Mapper{
             return new ModelAndView(attributes, "welcome.ftl");
         }, new FreeMarkerTemplateEngine());
 
+
+        get("/approvals", (request, response) -> {
+            Map<String, Object> attributes = new HashMap<>();
+
+            String sessionId = ResourceUtilities.getSessionCookie(request);
+            String username = sessionDAO.findUserNameBySessionId(sessionId);
+            attributes.put("sessionId", sessionId);
+
+            if (username == null) {
+                System.out.println("welcome() can't identify the user, redirecting to signup");
+                response.redirect("/signup");
+            }
+            else {
+                Document user = userDAO.getUserInfo(username);
+                attributes.put("username", username);
+                if(null!=user) {
+                    if("T".equals(user.getString("userType"))){
+                        String displayName = user.getString("firstName") + " " + user.getString("lastName");
+                        attributes.put("hdrLink", "");
+                        attributes.put("hdrLabel", "Welcome " + displayName);
+                        attributes.put("userType", user.getString("userType"));
+
+                        List<Document> forApproval = courseEnrollmentDAO.getCourseRegistrationListForTeacher(username);
+                        if(null!=forApproval && 0 < forApproval.size()) attributes.put("forApproval", forApproval);
+                    }
+                }
+            }
+
+            return new ModelAndView(attributes, "approvals.ftl");
+        }, new FreeMarkerTemplateEngine());
 
 /*
         get("login", (request, response) -> {
@@ -305,6 +335,7 @@ public class ProjectController implements Mapper{
                 attributes.put("hdrLink", "");
                 attributes.put("hdrLabel", "Welcome " + displayName);
                 attributes.put("username", username);
+                attributes.put("userType", user.getString("userType"));
             }
 
             return new ModelAndView(attributes, "course_template.ftl");
@@ -338,7 +369,7 @@ public class ProjectController implements Mapper{
                 }
                 else {
                     String msg;
-                    if(courseDAO.saveClass(username, classCode, className, classDescription, user.getString("firstName") + " " + user.getString("lastName")))
+                    if(courseDAO.saveClass(username, classCode, className, classDescription, user.getString("firstName") + " " + user.getString("lastName")) && userDAO.addUserClasses(username, classCode, className))
                         msg = "Successfully saved class(course).";
                     else
                         msg = "Problem saving class(course).";

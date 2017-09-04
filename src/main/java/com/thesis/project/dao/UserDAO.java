@@ -36,6 +36,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import static com.mongodb.client.model.Filters.and;
+import static com.mongodb.client.model.Filters.eq;
+
 public class UserDAO {
     private final MongoCollection<Document> usersCollection;
     private Random random = new SecureRandom();
@@ -91,21 +94,25 @@ public class UserDAO {
             docClass.append("lastModifiedDate", new Date());
 
             Document docUpdate = new Document("$set", docClass);
-            usersCollection.updateOne(Filters.eq("username", username), docUpdate);
+            usersCollection.updateOne(eq("username", username), docUpdate);
             return true;
         }
         return status;
     }
 
     //TODO: Create method of updating user information
-    public boolean addEnrolledClasses(String username, String classCode){
+    public boolean addUserClasses(String username, String classCode, String className){
         if(null!=username && null!=classCode){
-            Document findQuery = new Document("username", username);
-            Document item = new Document("scores", new Document("type","quiz").append("score",99));
-
-            Document updateQuery = new Document("$push", item);
-            usersCollection.updateOne(findQuery, updateQuery);
-            return true;
+            //db.users.find({"_id", "borgymanotoy", "classes"});
+            Document userClass = usersCollection.find(and(eq("_id", username), eq("classes.code", classCode))).first();
+            if(null==userClass){
+                Document docCourse = new Document("code", classCode).append("name", className);
+                Document updateQuery = new Document("$push", new Document("classes", docCourse));
+                usersCollection.updateOne(eq("_id", username), updateQuery);
+                return true;
+            }
+            else
+                System.out.println("User-Class already exists. Cannot proceed adding user-class.");
         }
         return false;
     }
@@ -113,18 +120,18 @@ public class UserDAO {
 
     public List<Document> getTeachers(){
         //db.users.find({userType: "T"}).pretty();
-        return usersCollection.find(Filters.eq("userType", "T")).into(new ArrayList<>());
+        return usersCollection.find(eq("userType", "T")).into(new ArrayList<>());
     }
 
     public List<Document> getStudents(){
         //db.users.find({userType: "T"}).pretty();
-        return usersCollection.find(Filters.eq("userType", "S")).into(new ArrayList<>());
+        return usersCollection.find(eq("userType", "S")).into(new ArrayList<>());
     }
 
     public List<User> getTeacherAccounts(){
         //db.users.find({userType: "T"}).pretty();
         List<User> users = new ArrayList<>();
-        List<Document> lstDocUsers = usersCollection.find(Filters.eq("userType", "T")).into(new ArrayList<>());
+        List<Document> lstDocUsers = usersCollection.find(eq("userType", "T")).into(new ArrayList<>());
         for(Document d : lstDocUsers)
             users.add(new User(d));
         return users;
@@ -133,7 +140,7 @@ public class UserDAO {
     public List<User> getStudentAccounts(){
         //db.users.find({userType: "T"}).pretty();
         List<User> users = new ArrayList<>();
-        List<Document> lstDocUsers = usersCollection.find(Filters.eq("userType", "S")).into(new ArrayList<>());
+        List<Document> lstDocUsers = usersCollection.find(eq("userType", "S")).into(new ArrayList<>());
         for(Document d : lstDocUsers)
             users.add(new User(d));
         return users;
@@ -141,14 +148,14 @@ public class UserDAO {
 
     public Document getUserInfo(String username){
         if(null!=username){
-            return usersCollection.find(Filters.eq("_id", username)).first();
+            return usersCollection.find(eq("_id", username)).first();
         }
 
         return null;
     }
 
     public Document validateLogin(String username, String password) {
-        Document user = usersCollection.find(Filters.eq("_id", username)).first();
+        Document user = usersCollection.find(eq("_id", username)).first();
 
         if (user == null) {
             System.out.println("User not in database");
