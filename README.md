@@ -22,7 +22,9 @@ MongoDB Post Actions (After both users and course_enrollment exists):
    - users.classes
    - course_enrollment.student && course_enrollment.class && course_enrollment.teacher
 
-> db.users.ensureIndex({"classes":1})
+> db.users.ensureIndex({"classes":1});
+
+result:
 {
 	"createdCollectionAutomatically" : false,
 	"numIndexesBefore" : 1,
@@ -30,7 +32,9 @@ MongoDB Post Actions (After both users and course_enrollment exists):
 	"ok" : 1
 }
 
-> db.course_enrollment.ensureIndex({"class":1, "student":1, "teacher":1})
+> db.course_enrollment.ensureIndex({"class":1, "student":1, "teacher":1});
+
+result:
 {
 	"createdCollectionAutomatically" : false,
 	"numIndexesBefore" : 1,
