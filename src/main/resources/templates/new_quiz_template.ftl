@@ -88,7 +88,7 @@
                             <div class="form-group right-inner-addon">
                                 <div class="col-md-11">
                                     <i class="fa fa-eye" aria-hidden="true"></i>
-                                    <input type="search" class="form-control" id="txtVideoUrl" name="videolink" placeholder="https://www.youtube.com/watch?v=<YoutubeVideoId>" title="Enter valid youtube video link and press ENTER key to refresh the video." />
+                                    <input type="search" class="form-control" id="txtVideoUrl" name="videolink" placeholder="https://www.youtube.com/watch?v=<YoutubeVideoId>" title="Enter valid youtube video link and press ENTER key to refresh the video." value="https://www.youtube.com/watch?v=__y8vWaVGqk" />
                                 </div>
                             </div>
 
