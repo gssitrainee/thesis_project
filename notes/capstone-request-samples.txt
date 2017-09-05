@@ -130,11 +130,10 @@ Note: Push class elements to users.classes array.
 
 [
     {
-        quiz_id: "quiztest1234",
-        class_code: "cs21",
-        class_name: "Introduction to Programming",
-        author_id: "user_id_1234",
-        author_name: "Borgy Manotoy",
+        _id: "cs56_file_systems",
+        class_code: "CS56",
+        author_id: "borgymanotoy",
+        topic_title: "File Systems",
         summary: "lorem ispum...",
         video_url: "http://www.../",
         active_date: <date>,
@@ -142,18 +141,27 @@ Note: Push class elements to users.classes array.
         items: [
             {
                 question: "What is the center of the solar system?",
-                choices: ["a. sun", "b. moon", "c. clouds", "d. barangay hall"],
-                answers: ["a"]
+                type: "single-answer",
+                choices: ["sun", "moon", "clouds", "barangay hall"],
+                answers: ["sun"]
             },
             {
                 question: "Who is the philippines national traitor?",
-                choices: ["a. Jose P. Rizal", "b. Andres Bonifacio", "c. Ninoy Aquino", "d. Eddie Gil"],
-                answers: ["c"]
+                type: "single-answer",
+                choices: ["Jose P. Rizal", "Andres Bonifacio", "Ninoy Aquino", "Eddie Gil"],
+                answers: ["Ninoy Aquino"]
             },
             {
                 question: "___ is a member of the ninja turtles.",
-                choices: ["a. Leonardo", "b. Donatello", "c. Raphael", "d. Michael Angelo"],
-                answers: ["a", "b", "c", "d"]
+                type: "multiple-answers",
+                choices: ["Leonardo", "Donatello", "Raphael", "Michael Angelo"],
+                answers: ["Leonardo", "Donatello", "Raphael", "Michael Angelo"]
+            },
+            {
+                question: "___ is a member of the ninja turtles.",
+                type: "boolean",
+                choices: ["True", "False"],
+                answers: ["True"]
             }
         ]
     }

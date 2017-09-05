@@ -19,6 +19,8 @@
                 }
             }
 
+            div.radio { display: inline-block; padding: 10px; margin-left: 30px; }
+
             .label {text-align: right}
             .error {color: red}
         </style>
@@ -82,8 +84,14 @@
                       </div>
 
                       <div class="form-group">
-                          <label class="radio-inline"><input type="radio" name="userType" value="T">Teacher</label>
-                          <label class="radio-inline"><input type="radio" name="userType" value="S">Student</label>
+                          <div class="radio">
+                              <input type="radio" id="rdbTrue" name="userType" value="T" />
+                              <label for="rdbTrue" class="radio-inline">Teacher</label>
+                          </div>
+                          <div class="radio">
+                              <input type="radio" id="rdbFalse" name="userType" value="S" />
+                              <label for="rdbFalse" class="radio-inline">Student</label>
+                          </div>
                       </div>
 
                       <div class="form-group">
