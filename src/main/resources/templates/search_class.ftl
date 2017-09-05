@@ -95,7 +95,7 @@
                         $.getJSON(my_url, function(json) {
                             $('table#tblClassSearch tbody').empty();
                             $.each(json, function(idx, doc) {
-                                $('table#tblClassSearch tbody').append("<tr><td>" + doc.classCode + "</td><td>" + doc.className + "</td><td>" + doc.classDescription + "</td><td>" + (doc.instructor ? doc.instructor : doc.teacher) + "</td><td><a href=\"javascript:void(0);\" onclick=\"submitClassEnrollment('" + doc.classCode + "');\" class='btn btn-primary' role='button'>Enroll</a></td></tr>");
+                                $('table#tblClassSearch tbody').append("<tr><td>" + doc._id + "</td><td>" + doc.className + "</td><td>" + doc.classDescription + "</td><td>" + (doc.instructor ? doc.instructor : doc.teacher) + "</td><td><a href=\"javascript:void(0);\" onclick=\"submitClassEnrollment('" + doc._id + "');\" class='btn btn-primary' role='button'>Enroll</a></td></tr>");
                             });
                         });
                     }

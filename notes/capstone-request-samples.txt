@@ -64,7 +64,7 @@
 
 
 
-* JSON: Student search for Class - [TODO]
+* JSON: Student search for Class - [DONE]
 
 {
     search_key: "CS42"
@@ -73,73 +73,57 @@
 
 
 
-* JSON: Student enrolls to Class (student-enrollment) - [TODO]
+* JSON: Student enrolls to Class (course_enrollment) - [DONE]
 
 {
     {
-        enrollment_id: enroll123,
-        student_id: student101,
-        student_name: "Borgy Manotoy",
-        class_code: cs56,
-        class_name: "Multimedia",
-        registration_date: <date>
+        _id : ObjectId("59ab266dbf2ead38a89c2734"),
+        student : "jpagduma",
+        studentName : "John Patrick Agduma",
+        class : "KS69",
+        className : "Kamasutra",
+        teacher : "jbastos",
+        teacherName : "Juan Bastos",
+        registrationDate : 2017-09-03 05:45:17.202,
+        status : "OPEN"
     }
 }
 
 
-* JSON: Teachers approves students enrollment (class-lists) - [TODO]
+* JSON: Teachers approves students enrollment (class-lists) - [DONE]
+
+Note: Push class elements to users.classes array.
 
 [
     {
-        enrollment_id: enroll123,
-        student_id: student101,
-        student_name: "John Patrick Agduma",
-        class_code: cs56,
-        class_name: "Multimedia",
-        registration_date: <date>,
-        is_active: true
+        "_id" : "jpagduma",
+        "firstName": "John Patrick",
+        "lastName": "Agduma",
+        "password" : "BSnvv73vv70+Pe+/ve+/vUDvv71q77+9Z1Pvv73vv70=,-1290928513",
+        "email" : "jpagduma@gmail.com",
+        "userType" : "S",
+        "classes": [
+            { "code": "cs56_092017", "name": "Operating System (September 2017)"}, 
+            { "code" : cs42_092017", "name": "Graphics Design (September 2017)"}
+        ]
     },
     {
-        enrollment_id: enroll434,
-        student_id: student102,
-        student_name: "Niko Mateo",
-        class_code: cs42,
-        class_name: Graphics Design,
-        registration_date: <date>,
-        is_active: true
-    },
+        "_id" : "ejsalipahmad",
+        "firstName": "Eric Jose",
+        "lastName": "Salip Ahmad",
+        "password" : "77+9Ghjvv73vv73GkO+/vTjvv701aTcI77+9dA==,-2068170197",
+        "email" : "ejsalipahmad@gmail.com",
+        "userType" : "T",
+        "classes": [
+            { "code": "cs56_062016", "name": "Operating System (June 2016)"}, 
+            { "code": "cs56_092017", "name": "Operating System (September 2017)"}, 
+            { "code" : cs42_092017", "name": "Graphics Design (September 2017)"}
+        ]
+    }
 ]
 
 
 
-* JSON: Student enrolled to Class (class_enrollment) - [TODO]
-
-[
-    {
-        student_id: student101,
-        student_name: "John Patrick Agduma",
-        class_code: cs56,
-        class_name: "Multimedia",
-        registration_date: <date>,
-        is_active: true
-    },
-    {
-        student_id: student102,
-        student_name: "Niko Mateo",
-        class_code: cs56,
-        class_name: "Multimedia",
-        registration_date: <date>,
-        is_active: true
-    },
-    {
-        student_id: student101,
-        student_name: "John Patrick Agduma",
-        class_code: cs42,
-        class_name: Graphics Design,
-        registration_date: <date>,
-        is_active: true
-    },
-]
 
 
 * JSON: Post a Quiz (quiz) - [TODO]

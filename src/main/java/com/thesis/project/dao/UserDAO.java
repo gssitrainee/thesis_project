@@ -103,11 +103,11 @@ public class UserDAO {
     //TODO: Create method of updating user information
     public boolean addUserClasses(String username, String classCode, String className){
         if(null!=username && null!=classCode){
-            //db.users.find({"_id", "borgymanotoy", "classes"});
-            Document userClass = usersCollection.find(and(eq("_id", username), eq("classes.code", classCode))).first();
+            //db.users.find({"_id": "borgymanotoy", "classes" : "CS56"});
+            //Document userClass = usersCollection.find(and(eq("_id", username), eq("classes", classCode))).first();
+            Document userClass = usersCollection.find(and(eq("_id", username), eq("classes", classCode))).first();
             if(null==userClass){
-                Document docCourse = new Document("code", classCode).append("name", className);
-                Document updateQuery = new Document("$push", new Document("classes", docCourse));
+                Document updateQuery = new Document("$push", new Document("classes", classCode));
                 usersCollection.updateOne(eq("_id", username), updateQuery);
                 return true;
             }
@@ -130,7 +130,7 @@ public class UserDAO {
 
     public List<Document> getClassStudents(String classCode){
         //db.users.find({"userType":"S","classes.code": "CS21"}).pretty();
-        return usersCollection.find(and(eq("userType", "S"), eq("classes.code", classCode))).into(new ArrayList<>());
+        return usersCollection.find(and(eq("userType", "S"), eq("classes", classCode))).into(new ArrayList<>());
     }
 
 

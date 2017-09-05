@@ -16,9 +16,6 @@ import static com.mongodb.client.model.Filters.eq;
 
 public class CourseEnrollmentDAO {
     private final MongoCollection<Document> courseEnrollmentCollection;
-    public static final String ENROLLMENT_STATUS_OPEN     = "OPEN";
-    public static final String ENROLLMENT_STATUS_ACCEPTED = "ACCEPTED";
-    public static final String ENROLLMENT_STATUS_DENIED   = "DENIED";
 
     public CourseEnrollmentDAO(final MongoDatabase projectDatabase){
         courseEnrollmentCollection = projectDatabase.getCollection("course_enrollment");
@@ -32,7 +29,6 @@ public class CourseEnrollmentDAO {
         enrollment.append("teacher", teacher);
         enrollment.append("teacherName", teacherName);
         enrollment.append("registrationDate", new Date());
-        enrollment.append("status", ENROLLMENT_STATUS_OPEN);
 
         try {
             courseEnrollmentCollection.insertOne(enrollment);

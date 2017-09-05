@@ -40,7 +40,7 @@
                             <#if userClasses??>
                                 <ul class="list-group">
                                     <#list userClasses as cls>
-                                        <li class="list-group-item"><a href="/course?code=${cls["code"]}">${cls["name"]}<#if cls["code"]??> (${cls["code"]})</#if></a></li>
+                                        <li class="list-group-item"><a href="/course?code=${cls["_id"]}">${cls["className"]}<#if cls["_id"]??> (${cls["_id"]})</#if></a></li>
                                     </#list>
                                 </ul>
                             </#if>
@@ -82,7 +82,7 @@
                             <#if userClasses??>
                                 <ul class="list-group">
                                     <#list userClasses as cls>
-                                        <li class="list-group-item">${cls["name"]}<#if cls["code"]??> (${cls["code"]})</#if></li>
+                                        <li class="list-group-item">${cls["className"]}<#if cls["_id"]??> (${cls["_id"]})</#if></li>
                                     </#list>
                                 </ul>
                             </#if>

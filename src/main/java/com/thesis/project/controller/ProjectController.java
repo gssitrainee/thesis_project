@@ -69,18 +69,20 @@ public class ProjectController implements Mapper{
                     attributes.put("userType", user.getString("userType"));
                     attributes.put("displayName", displayName);
 
-                    ArrayList<Document> userClasses =  (ArrayList) user.get("classes");
-                    if(null!=userClasses){
+                    List<Document> lstUserClasses = new ArrayList<>();
+                    ArrayList<Document> userClassCodes =  (ArrayList) user.get("classes");
+                    if(null!=userClassCodes){
                         System.out.println("has classes data");
-                        for(Object o : userClasses){
+                        for(Object o : userClassCodes){
                             System.out.println("[Class]: " + o.toString());
+                            lstUserClasses.add(courseDAO.findById(o.toString()));
                         }
                     }
                     else {
                         System.out.println("there are no class data");
                     }
 
-                    attributes.put("userClasses", userClasses);
+                    attributes.put("userClasses", lstUserClasses);
 
                     if("T".equals(user.getString("userType"))){
                         List<Document> forApproval = courseEnrollmentDAO.getCourseRegistrationListForTeacher(username);
@@ -251,18 +253,20 @@ public class ProjectController implements Mapper{
                     attributes.put("hdrLabel", "Welcome " + displayName);
                     attributes.put("userType", user.getString("userType"));
 
-                    ArrayList<Document> userClasses =  (ArrayList) user.get("classes");
-                    if(null!=userClasses){
+                    List<Document> lstUserClasses = new ArrayList<>();
+                    ArrayList<Document> userClassCodes =  (ArrayList) user.get("classes");
+                    if(null!=userClassCodes){
                         System.out.println("has classes data");
-                        for(Object o : userClasses){
+                        for(Object o : userClassCodes){
                             System.out.println("[Class]: " + o.toString());
+                            lstUserClasses.add(courseDAO.findById(o.toString()));
                         }
                     }
                     else {
                         System.out.println("there are no class data");
                     }
 
-                    attributes.put("userClasses", userClasses);
+                    attributes.put("userClasses", lstUserClasses);
 
                     if("T".equals(user.getString("userType"))){
                         List<Document> forApproval = courseEnrollmentDAO.getCourseRegistrationListForTeacher(username);
@@ -417,7 +421,7 @@ public class ProjectController implements Mapper{
             }
 
             if(null!=classCode){
-                Document docClass = courseDAO.findByClassCode(classCode);
+                Document docClass = courseDAO.findById(classCode);
                 if(null!=docClass){
                     String className = docClass.getString("className");
                     String classDescription = docClass.getString("classDescription");
@@ -519,21 +523,20 @@ public class ProjectController implements Mapper{
             String username = sessionDAO.findUserNameBySessionId(sessionId);
             attributes.put("sessionId", sessionId);
 
-            if(null!=username)
-                user = userDAO.getUserInfo(username);
-
-            if(null!=user){
-                String displayName = user.getString("firstName") + " " + user.getString("lastName");
-                attributes.put("hdrLink", "");
-                attributes.put("hdrLabel", "Welcome " + displayName);
-            }
-
             if (username == null) {
                 // looks like a bad request. user is not logged in
                 response.redirect("/login");
             }
             else {
                 attributes.put("username", username);
+
+                user = userDAO.getUserInfo(username);
+                if(null!=user){
+                    attributes.put("userType", user.getString("userType"));
+                    attributes.put("hdrLink", "");
+                    attributes.put("hdrLabel", "Welcome " + (user.getString("firstName") + " " + user.getString("lastName")));
+                }
+
                 List<Document> userClasses = courseDAO.getAllClassesByTeacher(username);
                 attributes.put("userClasses", userClasses);
             }

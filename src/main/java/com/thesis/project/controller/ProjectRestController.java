@@ -95,7 +95,7 @@ public class ProjectRestController implements Mapper {
                         //TODO: Check if student is currently enrolled in selected class, if not ENROLL to class. Otherwise, return error "Currently Enrolled to Class".
 
                         System.out.println("[class-code]: " + classCode);
-                        Document course = courseDAO.findByClassCode(classCode);
+                        Document course = courseDAO.findById(classCode);
                         String teacher = "n/a";
 
                         if(null!=course) teacher = course.getString("teacher");
@@ -108,7 +108,6 @@ public class ProjectRestController implements Mapper {
                         statusMsg = "Student is already enrolled to the selected class.";
                     }
                 }
-
             }
             else
                 response.redirect("/login");
@@ -117,9 +116,6 @@ public class ProjectRestController implements Mapper {
         }, json());
 
         post("/approveEnrollment", (request, response) -> {
-            System.out.println("\nInside approveEnrollment\n");
-
-
             String statusMsg = "";
             String sessionId = ResourceUtilities.getSessionCookie(request);
             String username = sessionDAO.findUserNameBySessionId(sessionId);
@@ -130,11 +126,11 @@ public class ProjectRestController implements Mapper {
 
                 boolean success = false;
                 if(null!=student && null!=classCode){
-                    Document course = courseDAO.findByClassCode(classCode);
+                    Document course = courseDAO.findById(classCode);
                     System.out.println("[student]: " + student);
                     System.out.println("[classCode]: " + classCode);
 
-                    success = userDAO.addUserClasses(student, course.getString("classCode"), course.getString("className")) && courseEnrollmentDAO.removeCourseEnrollment(classCode, student);
+                    success = userDAO.addUserClasses(student, course.getString("_id"), course.getString("className")) && courseEnrollmentDAO.removeCourseEnrollment(classCode, student);
                 }
 
                 if(success)
@@ -165,14 +161,10 @@ public class ProjectRestController implements Mapper {
 
         }, json());
 
-
-
-/*
-        after((request, response) -> {
-            response.type("application/json");
-        });
-*/
-
-
+        /*
+            after((request, response) -> {
+                response.type("application/json");
+            });
+        */
     }
 }

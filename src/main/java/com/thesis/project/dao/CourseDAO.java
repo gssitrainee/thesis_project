@@ -15,6 +15,8 @@ import java.util.Date;
 import java.util.List;
 
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Filters.or;
+import static com.mongodb.client.model.Filters.regex;
 
 public class CourseDAO {
     private final MongoCollection<Document> classCollection;
@@ -23,8 +25,8 @@ public class CourseDAO {
         classCollection = projectDatabase.getCollection("classes");
     }
 
-    public Document findByClassCode(String classCode) {
-        Document docClass = classCollection.find(eq("classCode", classCode)).first();
+    public Document findById(String classCode) {
+        Document docClass = classCollection.find(eq("_id", classCode)).first();
         return docClass;
     }
 
@@ -32,17 +34,18 @@ public class CourseDAO {
         if(null!=searchKey && !"".equals(searchKey)){
             //{ "$or": [{ "classCode" : { "$regex" : "ttl" , "$options" : "i"}}, { "className" : { "$regex" : "ttl" , "$options" : "i"}}] }
             //db.classes.find({ "$or": [{ "classCode" : { "$regex" : "ttl" , "$options" : "i"}}, { "className" : { "$regex" : "ttl" , "$options" : "i"}}] });
-            BasicDBObject regexQuery1 = new BasicDBObject("classCode", new BasicDBObject("$regex", searchKey) .append("$options", "i"));
-            BasicDBObject regexQuery2 = new BasicDBObject("className", new BasicDBObject("$regex", searchKey) .append("$options", "i"));
+//            BasicDBObject regexQuery1 = new BasicDBObject("classCode", new BasicDBObject("$regex", searchKey).append("$options", "i"));
+//            BasicDBObject regexQuery2 = new BasicDBObject("className", new BasicDBObject("$regex", searchKey).append("$options", "i"));
+//
+//            BasicDBList regexps = new BasicDBList();
+//            regexps.add(regexQuery1);
+//            regexps.add(regexQuery2);
+//
+//            BasicDBObject query = new BasicDBObject("$or", regexps);
+//            System.out.println(query.toString());
 
-            BasicDBList regexps = new BasicDBList();
-            regexps.add(regexQuery1);
-            regexps.add(regexQuery2);
-
-            BasicDBObject query = new BasicDBObject("$or", regexps);
-            System.out.println(query.toString());
-
-            return classCollection.find(query).into(new ArrayList<>());
+            //return classCollection.find(query).into(new ArrayList<>());
+            return classCollection.find(or(regex("_id", searchKey, "i"), regex("className", searchKey, "i"))).into(new ArrayList<>());
         }
 
         return null;
@@ -50,26 +53,16 @@ public class CourseDAO {
 
     public boolean saveClass(String username, String classCode, String className, String classDescription, String instructor){
         if(null!=username && null!=classCode && null!=className){
-            ObjectId objId = null;
-            Document document = findByClassCode(classCode);
-            if(null!=document) {
-                objId = document.getObjectId("_id");
-            }
-            else
-                objId = ObjectId.get();
-
-            Document docClass = new Document("teacher", username);
+            Document docClass = new Document();
             docClass.append("teacher", username);
-            docClass.append("classCode", classCode);
             docClass.append("className", className);
 
-            if(null!=classDescription && !"".equals(classDescription)){
+            if(null!=classDescription && !"".equals(classDescription))
                 docClass.append("classDescription", classDescription);
-            }
 
-            if(null!=instructor && !"".equals(instructor)) docClass.append("instructor", instructor);
+            if(null!=instructor && !"".equals(instructor))
+                docClass.append("instructor", instructor);
 
-            //docClass.append("creationDate", new Date());
             docClass.append("lastModifiedDate", new Date());
 
             Document docUpdate = new Document("$set", docClass);
@@ -78,13 +71,13 @@ public class CourseDAO {
                 UpdateOptions options = new UpdateOptions();
                 options.upsert(true);
 
-                classCollection.updateOne(eq("_id", objId), docUpdate, options);
+                classCollection.updateOne(eq("_id", classCode), docUpdate, options);
 
                 //classCollection.insertOne(docClass);
-                System.out.println("Saving class(course): " + docClass.toJson());
+                System.out.println("Saving class('" + classCode + "'): " + docClass.toJson());
                 return true;
             } catch (Exception e) {
-                System.out.println("Error saving class(course)");
+                System.out.println("Error saving class('" + classCode + "')");
                 return false;
             }
         }
@@ -103,7 +96,7 @@ public class CourseDAO {
 
                 docClass.append("lastModifiedDate", new Date());
 
-                classCollection.updateOne(eq("classCode", classCode), docClass);
+                classCollection.updateOne(eq("_id", classCode), docClass);
                 System.out.println("Update class(course): " + classCode);
                 return true;
             } catch (Exception e) {
@@ -118,11 +111,11 @@ public class CourseDAO {
     public boolean removeClass(String classCode){
         if(null!=classCode && !"".equals(classCode.trim())){
             try {
-                classCollection.deleteOne(eq("classCode", classCode));
-                System.out.println("Unregistering class(course): " + classCode);
+                classCollection.deleteOne(eq("_id", classCode));
+                System.out.println("Unregistering class('" + classCode + "'): " + classCode);
                 return true;
             } catch (Exception e) {
-                System.out.println("Error unregistering class(course)");
+                System.out.println("Error unregistering class('" + classCode + "')");
                 return false;
             }
         }
@@ -133,7 +126,7 @@ public class CourseDAO {
     public List<Document> getAllClassesByTeacher(String username){
         if(null!=username){
             return classCollection.find(eq("teacher", username))
-                    .sort(Sorts.ascending("classCode"))
+                    .sort(Sorts.ascending("_id"))
                     .into(new ArrayList<>());
         }
         return null;

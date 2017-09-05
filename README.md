@@ -16,6 +16,13 @@ URL: https://www.jetbrains.com/idea/
 Database: MongoDB
 URL: https://www.mongodb.com/download-center?jmp=nav#community
 
+MongoDB Post Actions:
+
+1. Create Indexes to the following collections:
+   - users.classes
+   - course_enrollment.student && course_enrollment.class && course_enrollment.teacher
+
+
 
 
 Steps:
