@@ -16,12 +16,27 @@ URL: https://www.jetbrains.com/idea/
 Database: MongoDB
 URL: https://www.mongodb.com/download-center?jmp=nav#community
 
-MongoDB Post Actions:
+MongoDB Post Actions (After both users and course_enrollment exists):
 
 1. Create Indexes to the following collections:
    - users.classes
    - course_enrollment.student && course_enrollment.class && course_enrollment.teacher
 
+> db.users.ensureIndex({"classes":1})
+{
+	"createdCollectionAutomatically" : false,
+	"numIndexesBefore" : 1,
+	"numIndexesAfter" : 2,
+	"ok" : 1
+}
+
+> db.course_enrollment.ensureIndex({"class":1, "student":1, "teacher":1})
+{
+	"createdCollectionAutomatically" : false,
+	"numIndexesBefore" : 1,
+	"numIndexesAfter" : 2,
+	"ok" : 1
+}
 
 
 
