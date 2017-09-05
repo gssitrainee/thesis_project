@@ -35,17 +35,17 @@
                     <#if sessionId?? && userType??>
                         <#if 'T'==userType>
                             <li class="nav-item">
-                                <a class="nav-link" href="/newCourse">Class Registration</a>
+                                <a class="nav-link" href="/newCourse">Course</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="/approvals">Approvals</a>
+                                <a class="nav-link" href="/approvals">Registrations</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="/postQuiz">Post a Quiz</a>
+                                <a class="nav-link" href="/postQuiz">Topics</a>
                             </li>
                         <#elseif 'S'==userType>
                             <li class="nav-item">
-                                <a class="nav-link" href="/classSearch">Search for Class</a>
+                                <a class="nav-link" href="/classSearch">Course Search</a>
                             </li>
                         </#if>
                         <#if sessionId??>

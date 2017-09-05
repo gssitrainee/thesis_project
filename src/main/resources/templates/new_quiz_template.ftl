@@ -54,7 +54,7 @@
             <div class="row sm-flex-center top-space">
                 <div class="col-sm-7 column-separator">
                     <div class="panel panel-info">
-                        <h4>Post a Topic & Quiz</h4>
+                        <h4>Topic</h4>
                         <div class="panel-body" style="border-right: 1px solid #eee;">
                         <#--<form id="postquizform" class="form-horizontal" role="form" action="/postQuiz" method="POST">-->
                             <div class="form-group has-error has-feedback">
@@ -62,9 +62,9 @@
                                 <div class="col-md-11">
                                     <select name="sel_class" id="selClass" class="form-control">
                                     <#if userClasses??>
-                                        <ul>
+                                        <ul class="list-group">
                                             <#list userClasses as cls>
-                                                <option value="${cls["classCode"]}">${cls["className"]}</option>
+                                                <option class="list-group-item" value="${cls["_id"]}">${cls["className"]}</option>
                                             </#list>
                                         </ul>
                                     <#else>
@@ -82,10 +82,7 @@
                             </div>
 
                             <div id="divVplayer" class="form-group">
-                                <iframe id="ytplayer" type="text/html" width="560" height="315"
-                                        src="https://www.youtube.com/embed/FUqZpQX8F5Y?autoplay=1&origin=http://example.com"
-                                        frameborder="0"
-                                        allowfullscreen></iframe>
+                                <iframe></iframe>
                             </div>
 
                             <div class="form-group right-inner-addon">
@@ -107,9 +104,13 @@
                 </div>
                 <div class="col-sm-5 pull-right">
                     <div class="panel panel-info">
-                        <h4>Post a Topic & Quiz</h4>
+                        <h4>Questions</h4>
                         <div class="panel-body" style="border-right: 1px solid #eee;">
-                            //Form for entering quiz questions and answers.
+                            <ul class="list-group">
+                                <li class="list-group-item"><a href="javascript:void(0)" onclick="displayQuizForm('abc123')">Unsa ang pangalan sa File System gamit sa Linux?</a></li>
+                                <li class="list-group-item"><a href="javascript:void(0)" onclick="displayQuizForm('bdc234')">Unsa ang pangalan sa File System gamit sa Windows na latest?</a></li>
+                                <li class="list-group-item"><a href="javascript:void(0)" onclick="displayQuizForm('cde345')">Unsa ang pangalan sa File System sa karaan na Windows?</a></li>
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -152,6 +153,10 @@
                     $('#divVplayer').append(iframeHTML);
 
                 }
+            };
+
+            var displayQuizForm = function(id){
+                alert("[quiz-id]: " + id);
             };
         </script>
     </body>
