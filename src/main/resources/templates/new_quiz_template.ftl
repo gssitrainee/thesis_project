@@ -159,7 +159,7 @@
                             <div class="form-group">
                                 <label for="txtTopicSummary" class="col-md-3 control-label">Summary</label>
                                 <div class="col-md-11">
-                                    <textarea class="form-control" id="txtTopicSummary" name="topicSummary" placeholder="Topic Summary" title="Enter Content Summary" cols="30" rows="10">${contents!""}</textarea>
+                                    <textarea class="form-control" id="txtTopicSummary" name="summary" placeholder="Topic Summary" title="Enter Content Summary" cols="30" rows="10">${contents!""}</textarea>
                                 </div>
                             </div>
                         <#--</form>-->
@@ -177,7 +177,7 @@
                             </ol>
                         </div>
                         <div>
-                            <button type="button" class="btn btn-info btn-md" data-toggle="modal" data-target="#myModal">Add Question</button>
+                            <button type="button" class="btn btn-info btn-md" onclick="createNewItem()">Add Question</button>
                         </div>
                     </div>
                 </div>
@@ -186,7 +186,7 @@
                 <div class="form-group">
                     <!-- Button -->
                     <div class="col-md-offset-3 col-md-11">
-                        <button type="button" class="btn btn-primary btn-lg">Post Topic</button>
+                        <button type="button" class="btn btn-primary btn-lg" onclick="postTopic()">Post Topic</button>
                     </div>
                 </div>
             </div>
@@ -224,7 +224,7 @@
                             </div>
                         </div>
 
-                        <div id="divBooleanChoices" class="form-group" style="display:none">
+                        <div id="divBooleanChoices" class="form-group">
                             <div class="radio">
                                 <input type="radio" id="rdbTrue" name="bChoice" value="T" />
                                 <label for="rdbTrue" class="radio-inline">True</label>
@@ -235,7 +235,7 @@
                             </div>
                         </div>
 
-                        <div id="divTextAnswers" class="form-group" style="display:none">
+                        <div id="divTextAnswers" class="form-group">
                             <h5>Choices</h5>
                             <div id="divChoices">
                                 <p>
@@ -256,12 +256,12 @@
                             </div>
 
                             <h5>Answer(s)</h5>
-                            <div id="divSingleAnswer" style="display:none">
+                            <div id="divSingleAnswer">
                                 <p>
                                     <input type="text" class="form-control" id="txtSingleAnswer" name="sanswer" class="form-control" placeholder="[Answer]" />
                                 </p>
                             </div>
-                            <div id="divMultipleAnswer" style="display:none">
+                            <div id="divMultipleAnswer">
                                 <p>
                                     <input type="text" class="form-control" id="txtAnswerA" name="manswer" class="form-control" placeholder="[Answer]" />
                                 </p>
@@ -294,6 +294,7 @@
         <@t.bootstrapCoreJS />
 
         <script>
+            var topic = new Object();
             var items = new Array();
 
             $(document).ready(function(e){
@@ -333,6 +334,7 @@
                 });
 
                 loadTestDetails();
+                refreshAnswerFieldsByType('init');
             });
 
             var loadTestDetails = function(){
@@ -471,6 +473,12 @@
                 return item;
             }
 
+            var createNewItem = function(){
+                clearItemFields();
+                $('#myModal').modal('show');
+                refreshAnswerFieldsByType('init');
+            };
+
             var displayItemDetails = function(id){
                 var item = findItem(id);
                 if(item){
@@ -494,7 +502,7 @@
 
                     $('#myModal').modal('show');
 
-                    refreshAnswerFieldsByType(item.booleanValue);
+                    refreshAnswerFieldsByType(item.answer_type);
                 }
             };
 
@@ -526,6 +534,8 @@
             };
 
             var refreshAnswerFieldsByType = function(answerType){
+                console.log("answerType: " + answerType);
+
                 switch (answerType) {
                     case 'BOOLEAN':
                         $('#divBooleanChoices').show();
@@ -552,6 +562,18 @@
                         $('#divMultipleAnswer').hide();
                 }
             }
+
+            var postTopic = function(){
+                topic.class = $('#selClass').val();
+                topic.topic = $('#txtTopic').val();
+                topic.videolink = $('#txtVideoUrl').val();
+                topic.summary = $('#txtTopicSummary').val();
+                topic.items = items;
+
+                JSON.stringify(topic);
+
+                //TODO submit via ajax post()
+            };
         </script>
     </body>
 </html>
