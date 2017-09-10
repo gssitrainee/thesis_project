@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import org.bson.Document;
 
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 
 import static com.thesis.project.util.JsonUtil.json;
@@ -160,6 +161,36 @@ public class ProjectRestController implements Mapper {
                 return "Unable to process student registration.";
 
         }, json());
+
+        post("/saveTopic", (request, response) -> {
+            String body = request.body();
+
+            System.out.println("\n");
+            System.out.println("SAVE-TOPIC");
+            System.out.println("------------------------------------------");
+            System.out.println("[PARAMETERS]: " + body);
+            System.out.println("------------------------------------------");
+            System.out.println("\n");
+
+
+            String[] parameters = body.split("&");
+            if(null!=parameters){
+                for(String s : parameters){
+                    String p = URLDecoder.decode(s, "UTF-8");
+                    //System.out.println("[parameter]: " + p);
+
+                    String key=null, value=null;
+                    String[] pInfo = p.split("=");
+                    key=pInfo[0];
+                    if(1 < pInfo.length) value=pInfo[1];
+
+                    System.out.println("[" + key + "]: " + value);
+                }
+            }
+
+            return "Topic successfully posted!";
+        }, json());
+
 
         /*
             after((request, response) -> {

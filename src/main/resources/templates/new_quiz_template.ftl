@@ -582,6 +582,42 @@
                 console.log(JSON.stringify(topic));
 
                 //TODO submit via ajax post()
+                var my_data = {
+                    id: $('#txtUserId').val(),
+                    username: $('#txtUsername').val(),
+                    firstname: $('#txtFirstname').val(),
+                    lastname: $('#txtLastname').val(),
+                    email: $('#txtEmail').val(),
+                    contactNo: $('#txtContact').val()
+                };
+
+                //console.log(JSON.stringify(my_data));
+
+                $.post( "/saveTopic", topic, function( msg ) {
+                    bootbox.alert(msg);
+                }, "json");
+
+/*                $.post( "test.php", { func: "getNameAndTime" }, function( data ) {
+                    console.log( data.name ); // John
+                    console.log( data.time ); // 2pm
+                }, "json");*/
+
+
+/*                $.ajax({
+                    method: "POST",
+                    url: my_url,
+                    data: JSON.stringify(my_data),
+                    headers: {
+                        'content-type': "application/json",
+                        'cache-control': "no-cache"
+                    },
+                })
+                .done(function( msg ) {
+                    bootbox.alert("POST Success: " + msg);
+                    $('input[type="text"], input[type="email"]').val("");
+                    $.unblockUI();
+                    reloadUsers();
+                });*/
             };
         </script>
     </body>
