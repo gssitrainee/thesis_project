@@ -570,7 +570,7 @@
                 topic.summary = $('#txtTopicSummary').val();
                 topic.items = items;
 
-                JSON.stringify(topic);
+                console.log(JSON.stringify(topic));
 
                 //TODO submit via ajax post()
             };
