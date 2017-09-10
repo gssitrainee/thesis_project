@@ -506,6 +506,15 @@
                 }
             };
 
+            var clearTopicFields = function(){
+                clearItemFields();
+
+                topic = new Object();
+                items = new Array();
+
+                $('#listQuestions').empty();
+            };
+
             var clearItemFields = function(){
                 $('#hndId').val("");
                 $('#txtQuestion').val("");
