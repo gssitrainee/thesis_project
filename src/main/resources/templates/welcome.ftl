@@ -89,14 +89,14 @@
                         </div>
                     </div>
                     <div class="col-sm-6 pull-right">
-                        <p>Active Class Quiz</p>
-                        <div class="list">
+                        <p>Active Topics</p>
+                        <#if topics??>
                             <ul class="list-group">
-                                <li class="list-group-item">(CS21) Quiz 01: Data Types</li>
-                                <li class="list-group-item">(MATH01) Quiz 02: Basic Arithmetic</li>
-                                <li class="list-group-item">(CS56) Quiz 04: File Systems</li>
+                                <#list topics as t>
+                                    <li class="list-group-item" onclick="window.location='/viewTopic?tid=${t["_id"]}'">(${t["classCode"]}) : ${t["topic"]}</li>
+                                </#list>
                             </ul>
-                        </div>
+                        </#if>
                     </div>
                 </div>
             <#else>

@@ -92,8 +92,6 @@ public class ProjectController implements Mapper{
                         if(null!=forApproval && 0 < forApproval.size()) attributes.put("forApproval", forApproval);
                     }
                     else if("S".equals(user.getString("userType"))){
-                        //TODO: Add List of Class enrolled.
-                        //TODO: Add List of Active Quizzes not taken.
                         String[] arClasses = classes.toArray(new String[0]);
                         List<Document> topics = topicDAO.findByClassesLatest(arClasses);
                         attributes.put("topics", topics);
@@ -259,13 +257,16 @@ public class ProjectController implements Mapper{
                     attributes.put("hdrLabel", "Welcome " + displayName);
                     attributes.put("userType", user.getString("userType"));
 
+                    List<String> classes = new ArrayList<>();
                     List<Document> lstUserClasses = new ArrayList<>();
                     ArrayList<Document> userClassCodes =  (ArrayList) user.get("classes");
                     if(null!=userClassCodes){
                         System.out.println("has classes data");
                         for(Object o : userClassCodes){
-                            System.out.println("[Class]: " + o.toString());
-                            lstUserClasses.add(courseDAO.findById(o.toString()));
+                            String classCode = o.toString();
+                            System.out.println("[Class]: " + classCode);
+                            classes.add(classCode);
+                            lstUserClasses.add(courseDAO.findById(classCode));
                         }
                     }
                     else {
@@ -279,8 +280,9 @@ public class ProjectController implements Mapper{
                         if(null!=forApproval && 0 < forApproval.size()) attributes.put("forApproval", forApproval);
                     }
                     else if("S".equals(user.getString("userType"))){
-                        //TODO: Add List of Class enrolled.
-                        //TODO: Add List of Active Quizzes not taken.
+                        String[] arClasses = classes.toArray(new String[0]);
+                        List<Document> topics = topicDAO.findByClassesLatest(arClasses);
+                        attributes.put("topics", topics);
                     }
                 }
 
