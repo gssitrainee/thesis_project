@@ -34,17 +34,8 @@ public class CourseDAO {
         if(null!=searchKey && !"".equals(searchKey)){
             //{ "$or": [{ "classCode" : { "$regex" : "ttl" , "$options" : "i"}}, { "className" : { "$regex" : "ttl" , "$options" : "i"}}] }
             //db.classes.find({ "$or": [{ "classCode" : { "$regex" : "ttl" , "$options" : "i"}}, { "className" : { "$regex" : "ttl" , "$options" : "i"}}] });
-//            BasicDBObject regexQuery1 = new BasicDBObject("classCode", new BasicDBObject("$regex", searchKey).append("$options", "i"));
-//            BasicDBObject regexQuery2 = new BasicDBObject("className", new BasicDBObject("$regex", searchKey).append("$options", "i"));
-//
-//            BasicDBList regexps = new BasicDBList();
-//            regexps.add(regexQuery1);
-//            regexps.add(regexQuery2);
-//
-//            BasicDBObject query = new BasicDBObject("$or", regexps);
-//            System.out.println(query.toString());
 
-            //return classCollection.find(query).into(new ArrayList<>());
+
             return classCollection.find(or(regex("_id", searchKey, "i"), regex("className", searchKey, "i"))).into(new ArrayList<>());
         }
 

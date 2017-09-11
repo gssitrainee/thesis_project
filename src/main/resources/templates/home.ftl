@@ -9,22 +9,7 @@
 
         <!-- Bootstrap core CSS -->
         <link href="css/bootstrap.min.css" rel="stylesheet">
-
-        <!-- Custom styles for this template -->
-        <style>
-            body {
-                padding-top: 54px;
-            }
-            @media (min-width: 992px) {
-                body {
-                    padding-top: 56px;
-                }
-            }
-
-            div#divMainContainer { padding: 25px; }
-            h4 { padding: 20px 0; }
-
-        </style>
+        <link rel="stylesheet" href="css/home.css">
     </head>
 
     <body>
@@ -89,14 +74,14 @@
                         </div>
                     </div>
                     <div class="col-sm-6 pull-right">
-                        <p>Active Class Quiz</p>
-                        <div class="list">
+                        <p>Active Topics</p>
+                        <#if topics??>
                             <ul class="list-group">
-                                <li class="list-group-item">(CS21) Quiz 01: Data Types</li>
-                                <li class="list-group-item">(MATH01) Quiz 02: Basic Arithmetic</li>
-                                <li class="list-group-item">(CS56) Quiz 04: File Systems</li>
+                                <#list topics as t>
+                                    <li class="list-group-item" onclick="window.location='/viewTopic?tid=${t["_id"]}'">(${t["classCode"]}) : ${t["topic"]}</li>
+                                </#list>
                             </ul>
-                        </div>
+                        </#if>
                     </div>
                 </div>
             <#else>
@@ -110,38 +95,7 @@
         </div>
 
         <@t.bootstrapCoreJS />
-
-        <script>
-            $(document).ready(function(){
-                //Put initializations here
-            });
-
-            var reloadEnrollmentList = function(){
-                var my_url = "/courseRegistrations";
-                $.getJSON(my_url, function(json) {
-                    $('table#tblEnrollmentForApproval tbody').empty();
-                    $.each(json, function(idx, doc) {
-                        $('table#tblEnrollmentForApproval tbody').append("<tr><td>" + doc.className + " (" + doc.class + ")</td><td>" + doc.studentName + "</td><td><a href='javascript:void(0);' onclick=\"approveStudentClassEnrollment('" + doc.student + "','" + doc.class + "')\" class=\"btn btn-primary\" role=\"button\">Approve</a></td><td><a href='javascript:void(0);' onclick=\"denyStudentClassEnrollment('" + doc.student + "','" + doc.class + "')\" class=\"btn btn-primary\" role=\"button\">Deny</a></td></tr>");
-                    });
-                });
-            }
-
-            var approveStudentClassEnrollment = function(student, classCode){
-                var my_url = "/approveEnrollment?cc=" + classCode + "&su=" + student;
-                $.post(my_url, function(msg){
-                    bootbox.alert(msg);
-                    reloadEnrollmentList();
-                });
-            };
-
-            var denyStudentClassEnrollment = function(student, classCode){
-                var my_url = "/denyEnrollment?cc=" + classCode + "&su=" + student;
-                $.post(my_url, function(msg){
-                    bootbox.alert(msg);
-                    reloadEnrollmentList();
-                });
-            };
-        </script>
+        <script src="js/home.js"></script>
 
     </body>
 </html>

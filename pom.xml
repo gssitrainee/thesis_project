@@ -43,12 +43,6 @@
           <version>3.1</version>
       </dependency>
 
-<!--
-      <dependency>
-          <groupId>commons-codec</groupId>
-          <artifactId>commons-codec</artifactId>
-          <version>1.7</version>
-      </dependency>-->
       <dependency>
           <groupId>com.google.code.gson</groupId>
           <artifactId>gson</artifactId>
@@ -67,6 +61,23 @@
           <target>1.8</target>
         </configuration>
       </plugin>
+
+        <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>1.6.0</version>
+            <executions>
+                <execution>
+                    <goals>
+                        <goal>java</goal>
+                    </goals>
+                </execution>
+            </executions>
+            <configuration>
+                <mainClass>com.thesis.project.CapstoneApplication</mainClass>
+            </configuration>
+        </plugin>
+
     </plugins>
   </build>
 

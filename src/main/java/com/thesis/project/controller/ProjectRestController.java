@@ -1,16 +1,18 @@
 package com.thesis.project.controller;
 
-import com.mongodb.BasicDBList;
+import com.google.gson.Gson;
+import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.util.JSON;
 import com.thesis.project.dao.*;
+import com.thesis.project.model.Topic;
 import com.thesis.project.util.ResourceUtilities;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.bson.Document;
 
 import java.io.IOException;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 
 import static com.thesis.project.util.JsonUtil.json;
@@ -22,7 +24,7 @@ public class ProjectRestController implements Mapper {
 
     private final CourseDAO courseDAO;
     private final CourseEnrollmentDAO courseEnrollmentDAO;
-    private final PostDAO postDAO;
+    private final TopicDAO topicDAO;
     private final UserDAO userDAO;
     private final SessionDAO sessionDAO;
 
@@ -32,7 +34,7 @@ public class ProjectRestController implements Mapper {
 
         courseDAO = new CourseDAO(projectDatabase);
         courseEnrollmentDAO = new CourseEnrollmentDAO(projectDatabase);
-        postDAO = new PostDAO(projectDatabase);
+        topicDAO = new TopicDAO(projectDatabase);
         userDAO = new UserDAO(projectDatabase);
         sessionDAO = new SessionDAO(projectDatabase);
 
@@ -163,32 +165,19 @@ public class ProjectRestController implements Mapper {
         }, json());
 
         post("/saveTopic", (request, response) -> {
-            String body = request.body();
+            String json = request.queryParams("jtopic");
 
-            System.out.println("\n");
-            System.out.println("SAVE-TOPIC");
-            System.out.println("------------------------------------------");
-            System.out.println("[PARAMETERS]: " + body);
-            System.out.println("------------------------------------------");
-            System.out.println("\n");
-
-
-            String[] parameters = body.split("&");
-            if(null!=parameters){
-                for(String s : parameters){
-                    String p = URLDecoder.decode(s, "UTF-8");
-                    //System.out.println("[parameter]: " + p);
-
-                    String key=null, value=null;
-                    String[] pInfo = p.split("=");
-                    key=pInfo[0];
-                    if(1 < pInfo.length) value=pInfo[1];
-
-                    System.out.println("[" + key + "]: " + value);
-                }
+            boolean success = false;
+            Topic topic = null;
+            if(null!=json){
+                Document docTopic = Document.parse(json);
+                success = topicDAO.addTopic(docTopic);
             }
 
-            return "Topic successfully posted!";
+            if(success)
+                return "Topic successfully posted!";
+            else
+                return "Unable to save topic.";
         }, json());
 
 

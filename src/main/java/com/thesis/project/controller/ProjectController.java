@@ -25,7 +25,7 @@ public class ProjectController implements Mapper{
 
     private final CourseDAO courseDAO;
     private final CourseEnrollmentDAO courseEnrollmentDAO;
-    private final PostDAO postDAO;
+    private final TopicDAO topicDAO;
     private final UserDAO userDAO;
     private final SessionDAO sessionDAO;
 
@@ -35,7 +35,7 @@ public class ProjectController implements Mapper{
 
         courseDAO = new CourseDAO(projectDatabase);
         courseEnrollmentDAO = new CourseEnrollmentDAO(projectDatabase);
-        postDAO = new PostDAO(projectDatabase);
+        topicDAO = new TopicDAO(projectDatabase);
         userDAO = new UserDAO(projectDatabase);
         sessionDAO = new SessionDAO(projectDatabase);
 
@@ -69,13 +69,16 @@ public class ProjectController implements Mapper{
                     attributes.put("userType", user.getString("userType"));
                     attributes.put("displayName", displayName);
 
+                    List<String> classes = new ArrayList<>();
                     List<Document> lstUserClasses = new ArrayList<>();
                     ArrayList<Document> userClassCodes =  (ArrayList) user.get("classes");
                     if(null!=userClassCodes){
                         System.out.println("has classes data");
                         for(Object o : userClassCodes){
-                            System.out.println("[Class]: " + o.toString());
-                            lstUserClasses.add(courseDAO.findById(o.toString()));
+                            String classCode = o.toString();
+                            System.out.println("[Class]: " + classCode);
+                            classes.add(classCode);
+                            lstUserClasses.add(courseDAO.findById(classCode));
                         }
                     }
                     else {
@@ -91,6 +94,9 @@ public class ProjectController implements Mapper{
                     else if("S".equals(user.getString("userType"))){
                         //TODO: Add List of Class enrolled.
                         //TODO: Add List of Active Quizzes not taken.
+                        String[] arClasses = classes.toArray(new String[0]);
+                        List<Document> topics = topicDAO.findByClassesLatest(arClasses);
+                        attributes.put("topics", topics);
                     }
                 }
             }
@@ -545,66 +551,74 @@ public class ProjectController implements Mapper{
         }, new FreeMarkerTemplateEngine());
 
 
-        // handle the new quiz posting submission
-        post("postQuiz", (request, response) -> {
+        get("/viewTopic", (request, response) -> {
             Map<String, Object> attributes = new HashMap<>();
-            attributes.put("message", "Hello World!");
 
-            String title = StringEscapeUtils.escapeHtml4(request.queryParams("subject"));
-            String post = StringEscapeUtils.escapeHtml4(request.queryParams("body"));
-            String tags = StringEscapeUtils.escapeHtml4(request.queryParams("tags"));
-
+            Document user = null;
             String sessionId = ResourceUtilities.getSessionCookie(request);
             String username = sessionDAO.findUserNameBySessionId(sessionId);
             attributes.put("sessionId", sessionId);
 
-            if (username == null) {
-                response.redirect("/login");    // only logged in users can post to blog
-            }
-            else if (title.equals("") || post.equals("")) {
-                // redisplay page with errors
-                attributes.put("errors", "post must contain a title and blog entry.");
-                attributes.put("subject", title);
+            if (username == null)
+                response.redirect("/login");
+            else {
                 attributes.put("username", username);
-                attributes.put("tags", tags);
-                attributes.put("body", post);
+
+                user = userDAO.getUserInfo(username);
+                if(null!=user){
+                    attributes.put("userType", user.getString("userType"));
+                    attributes.put("hdrLink", "");
+                    attributes.put("hdrLabel", "Welcome " + (user.getString("firstName") + " " + user.getString("lastName")));
+                }
+
+                String topicId = StringEscapeUtils.escapeHtml4(request.queryParams("tid"));
+
+                System.out.println("\n\n");
+                System.out.println("VIEW-TOPIC");
+                System.out.println("---------------------------------------------");
+                System.out.println("[TOPIC-ID]: " + topicId);
+                System.out.println("---------------------------------------------");
+                System.out.println("\n\n");
+
+                if(null!=topicId){
+                    Document docTopic = topicDAO.findById(topicId);
+                    System.out.println("TOPIC: " + docTopic.toJson());
+                    if(null!=docTopic){
+                        attributes.put("topicId", docTopic.getString("_id"));
+
+                        String classCode = docTopic.getString("classCode");
+                        if(null!=classCode){
+                            Document docCourse = courseDAO.findById(classCode);
+                            if(null!=docCourse){
+                                String course = docCourse.getString("className");
+                                attributes.put("course", course);
+                            }
+                        }
+
+                        System.out.println("[topic]: " + docTopic.getString("topic"));
+                        System.out.println("[videoLink]: " + docTopic.getString("videoLink"));
+                        System.out.println("[summary]: " + docTopic.getString("summary"));
+
+
+                        attributes.put("topic", docTopic.getString("topic"));
+                        attributes.put("summary", docTopic.getString("summary"));
+                        attributes.put("videoLink", docTopic.getString("videoLink"));
+
+                        ArrayList<Document> items =  (ArrayList) docTopic.get("items");
+                        System.out.println("items.count: " + items.size());
+
+                        attributes.put("items", items);
+                    }
+                    else
+                        System.out.println("Topic not found!");
+                }
             }
-            else {
-                // extract tags
-                ArrayList<String> tagsArray = ResourceUtilities.extractTags(tags);
 
-                // substitute some <p> for the paragraph breaks
-                post = post.replaceAll("\\r?\\n", "<p>");
-
-                String permalink = postDAO.addPost(title, post, tagsArray, username);
-
-                // now redirect to the blog permalink
-                response.redirect("/post/" + permalink);
-            }
-
-            return new ModelAndView(attributes, "home.ftl");
+            return new ModelAndView(attributes, "view_topic_template.ftl");
         }, new FreeMarkerTemplateEngine());
 
 
-        get("/quiz/:permalink", (request, response) -> {
-            Map<String, Object> attributes = new HashMap<>();
-            String permalink = request.params(":permalink");
-            Document post = postDAO.findByPermalink(permalink);
-            if (post == null) {
-                response.redirect("/post_not_found");
-            }
-            else {
-                // empty comment to hold new comment in form at bottom of blog entry detail page
-                Map<String, String> new_comment = new HashMap<>();
-                new_comment.put("name", "");
-                new_comment.put("email", "");
-                new_comment.put("body", "");
 
-                attributes.put("post", post);
-                attributes.put("comment", new_comment);
-            }
-            return new ModelAndView(attributes, "entry_template.ftl");
-        }, new FreeMarkerTemplateEngine());
 
 
 
