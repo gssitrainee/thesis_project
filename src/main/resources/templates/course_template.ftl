@@ -35,6 +35,8 @@
                 border: 1px solid #ddd;
                 background-color: #eee;
             }
+
+            span.details, p.details { margin-left: 10px; }
         </style>
     </head>
     <body>
@@ -46,37 +48,24 @@
                     <div class="panel panel-info">
                         <h4>Course Details</h4>
                         <div class="panel-body" >
-                            <form id="saveclassform" class="form-horizontal" role="form" action="/saveCourseDetails" method="POST">
+                            <div class="form-group has-error has-feedback">
+                                <label class="control-label"><b>Class Code:</b><span class="details">${classCode!""}</span></label>
+                            </div>
 
-                                <div class="form-group has-error has-feedback">
-                                    <label for="txtClassCode" class="control-label">Class Code</label>
-                                    <div>
-                                        <input type="text" id="txtClassCode" class="form-control" name="classCode" value="${classCode!""}" placeholder="Class or Course Code" title="Enter Class or Course Code" />
-                                    </div>
+                            <div class="form-group">
+                                <label class="control-label"><b>Class Name:</b><span class="details">${className!""}</span></label>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label"><b>Class Description:</b><p class="details">${classDescription!""}</p></label>
+                            </div>
+
+                            <div class="form-group">
+                                <!-- Button -->
+                                <div class="col-md-offset-3 col-md-9">
+                                    <input type="submit" id="btn-signup" class="btn btn-info" data-toggle="modal" data-target="#myModal" value="Course Details" />
                                 </div>
-
-                                <div class="form-group">
-                                    <label for="txtClassName" class="control-label">Class Name</label>
-                                    <div>
-                                        <input type="text" class="form-control" id="txtClassName" name="className" value="${className!""}" placeholder="Class or Course Name" title="Enter Class or Course Name" />
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="txtClassDescription" class="control-label">Class Description</label>
-                                    <div>
-                                        <textarea class="form-control" id="txtClassDescription" name="classDescription" placeholder="Class or Course Description" title="Enter Class or Course Description" cols="30" rows="3" style="width: 91.5%">${classDescription!""}</textarea>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <!-- Button -->
-                                    <div class="col-md-offset-3 col-md-9">
-                                        <input type="submit" id="btn-signup" class="btn btn-info" value="Save Class Details" />
-                                    </div>
-                                </div>
-
-                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -142,39 +131,50 @@
             </div>
         </div>
 
+        <!-- Modal for Add Question -->
+        <div class="modal fade" id="myModal" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Course Details</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group has-error has-feedback">
+                            <label for="txtClassCode" class="control-label">Class Code</label>
+                            <div>
+                                <input type="text" id="txtClassCode" class="form-control" name="classCode" value="${classCode!""}" placeholder="Class or Course Code" title="Enter Class or Course Code" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="txtClassName" class="control-label">Class Name</label>
+                            <div>
+                                <input type="text" class="form-control" id="txtClassName" name="className" value="${className!""}" placeholder="Class or Course Name" title="Enter Class or Course Name" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="txtClassDescription" class="control-label">Class Description</label>
+                            <div>
+                                <textarea class="form-control" id="txtClassDescription" name="classDescription" placeholder="Class or Course Description" title="Enter Class or Course Description" cols="30" rows="3" style="width: 91.5%">${classDescription!""}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-info" data-dismiss="modal" onclick="updateCourseDetails()">Save</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- End: Modal For Add Question -->
+
         <@t.bootstrapCoreJS />
-
-        <script>
-            $(document).ready(function(){
-                //Put initializations here
-            });
-
-            var reloadEnrollmentList = function(){
-                var my_url = "/courseRegistrations";
-                $.getJSON(my_url, function(json) {
-                    $('table#tblEnrollmentForApproval tbody').empty();
-                    $.each(json, function(idx, doc) {
-                        $('table#tblEnrollmentForApproval tbody').append("<tr><td>" + doc.className + " (" + doc.class + ")</td><td>" + doc.studentName + "</td><td><a href='javascript:void(0);' onclick=\"approveStudentClassEnrollment('" + doc.student + "','" + doc.class + "')\" class=\"btn btn-primary\" role=\"button\">Approve</a></td><td><a href='javascript:void(0);' onclick=\"denyStudentClassEnrollment('" + doc.student + "','" + doc.class + "')\" class=\"btn btn-primary\" role=\"button\">Deny</a></td></tr>");
-                    });
-                });
-            }
-
-            var approveStudentClassEnrollment = function(student, classCode){
-                var my_url = "/approveEnrollment?cc=" + classCode + "&su=" + student;
-                $.post(my_url, function(msg){
-                    bootbox.alert(msg);
-                    reloadEnrollmentList();
-                });
-            };
-
-            var denyStudentClassEnrollment = function(student, classCode){
-                var my_url = "/denyEnrollment?cc=" + classCode + "&su=" + student;
-                $.post(my_url, function(msg){
-                    bootbox.alert(msg);
-                    reloadEnrollmentList();
-                });
-            };
-        </script>
+        <script src="js/course.js"></script>
 
     </body>
 </html>

@@ -363,9 +363,8 @@ public class ProjectController implements Mapper{
 
 
         // handle the new class registration
-        post("saveCourseDetails", (request, response) -> {
+/*        post("saveCourseDetails", (request, response) -> {
             Map<String, Object> attributes = new HashMap<>();
-            attributes.put("message", "Hello World!");
 
             String classCode = StringEscapeUtils.escapeHtml4(request.queryParams("classCode"));
             String className = StringEscapeUtils.escapeHtml4(request.queryParams("className"));
@@ -405,7 +404,7 @@ public class ProjectController implements Mapper{
 
 
             return new ModelAndView(attributes, "course_template.ftl");
-        }, new FreeMarkerTemplateEngine());
+        }, new FreeMarkerTemplateEngine());*/
 
 
         // will present the form used to process get and display class using class code

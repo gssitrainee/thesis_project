@@ -164,6 +164,31 @@ public class ProjectRestController implements Mapper {
 
         }, json());
 
+        post("/saveCourseDetails", (request, response) -> {
+            String classCode = StringEscapeUtils.escapeHtml4(request.queryParams("classCode"));
+            String className = StringEscapeUtils.escapeHtml4(request.queryParams("className"));
+            String classDescription = StringEscapeUtils.escapeHtml4(request.queryParams("classDescription"));
+
+            Document user = null;
+            String sessionId = ResourceUtilities.getSessionCookie(request);
+            String username = sessionDAO.findUserNameBySessionId(sessionId);
+
+            String msg = "Unknown User!";
+            if(null!=username) {
+                user = userDAO.getUserInfo(username);
+                boolean successCourseSave = courseDAO.saveClass(username, classCode, className, classDescription, user.getString("firstName") + " " + user.getString("lastName"));
+                if(successCourseSave) {
+                    msg = "Successfully saved class(course).";
+                    userDAO.addUserClasses(username, classCode, className);
+                }
+                else
+                    msg = "Problem saving class(course).";
+            }
+
+            return msg;
+        }, json());
+
+
         post("/saveTopic", (request, response) -> {
             String json = request.queryParams("jtopic");
 
