@@ -98,23 +98,36 @@ var saveQuestion = function(){
         item = new Object();
     }
 
-
     var question = $('#txtQuestion').val();
     var qType = $('#selQuestionType').val();
 
-    var choiceA = $('#txtChoiceA').val();
-    var choiceB = $('#txtChoiceB').val();
-    var choiceC = $('#txtChoiceC').val();
-    var choiceD = $('#txtChoiceD').val();
-    var choiceE = $('#txtChoiceE').val();
+    var choices = new Array();
+    var answers = new Array();
 
-    var booleanValue = $( 'input[name=bChoice]:checked' ).val();
-    var singleAnswer = $('#txtSingleAnswer').val();
-    var answerA = $('#txtAnswerA').val();
-    var answerB = $('#txtAnswerB').val();
-    var answerC = $('#txtAnswerC').val();
-    var answerD = $('#txtAnswerD').val();
-    var answerE = $('#txtAnswerE').val();
+    if('BOOLEAN'==qType){
+        choices.push('True');
+        choices.push('False');
+        answers.push($('input[name=bChoice]:checked').val());
+    }
+    else {
+        if(''!=$('#txtChoiceA').val().trim()) choices.push($('#txtChoiceA').val());
+        if(''!=$('#txtChoiceB').val().trim()) choices.push($('#txtChoiceB').val());
+        if(''!=$('#txtChoiceC').val().trim()) choices.push($('#txtChoiceC').val());
+        if(''!=$('#txtChoiceD').val().trim()) choices.push($('#txtChoiceD').val());
+        if(''!=$('#txtChoiceE').val().trim()) choices.push($('#txtChoiceE').val());
+
+        if('SINGLE_ANSWER'==qType){
+            if(''!=$('#txtSingleAnswer').val().trim()) answers.push($('#txtSingleAnswer').val())
+        }
+        else if('MULTIPLE_ANSWERS'==qType){
+            if(''!=$('#txtAnswerA').val().trim()) answers.push($('#txtAnswerA').val());
+            if(''!=$('#txtAnswerB').val().trim()) answers.push($('#txtAnswerB').val());
+            if(''!=$('#txtAnswerC').val().trim()) answers.push($('#txtAnswerC').val());
+            if(''!=$('#txtAnswerD').val().trim()) answers.push($('#txtAnswerD').val());
+            if(''!=$('#txtAnswerE').val().trim()) answers.push($('#txtAnswerE').val());
+        }
+
+    }
 
     if(question){
         item.id = question.replace(/[^\w\s]/gi, '').replace(/\s/gi,'_').toLowerCase();
@@ -123,19 +136,8 @@ var saveQuestion = function(){
 
     if(qType) item.answer_type = qType;
 
-    if(choiceA) item.choiceA = choiceA;
-    if(choiceB) item.choiceB = choiceB;
-    if(choiceC) item.choiceC = choiceC;
-    if(choiceD) item.choiceD = choiceD;
-    if(choiceE) item.choiceE = choiceE;
-
-    if(booleanValue) item.booleanValue = booleanValue;
-    if(singleAnswer && ''!=singleAnswer.trim()) item.singleAnswer = singleAnswer;
-    if(answerA && ''!=answerA.trim()) item.answerA = answerA;
-    if(answerB && ''!=answerB.trim()) item.answerB = answerB;
-    if(answerC && ''!=answerC.trim()) item.answerC = answerC;
-    if(answerD && ''!=answerD.trim()) item.answerD = answerD;
-    if(answerE && ''!=answerE.trim()) item.answerE = answerE;
+    item.choices = choices;
+    item.answers = answers;
 
     bootbox.alert("Item Successfully Saved!");
     console.log(JSON.stringify(item))
@@ -192,20 +194,44 @@ var displayItemDetails = function(id){
         $('#hndId').val(item.id);
         $('#txtQuestion').val(item.question);
         $('#selQuestionType').val(item.answer_type);
-        $('#txtChoiceA').val(item.choiceA);
-        $('#txtChoiceB').val(item.choiceB);
-        $('#txtChoiceC').val(item.choiceC);
-        $('#txtChoiceD').val(item.choiceD);
-        $('#txtChoiceE').val(item.choiceE);
 
-        $("input[name=bChoice][value='" + item.booleanValue + "']").prop("checked",true);
+        if(item.choices){
+            if('BOOLEAN'!=item.answer_type){
+                for(var i=0; i < item.choices.length; i++){
+                    var choice = item.choices[i];
+                    if(''!=choice){
+                        if(i==0) $('#txtChoiceA').val(choice);
+                        if(i==1) $('#txtChoiceB').val(choice);
+                        if(i==2) $('#txtChoiceC').val(choice);
+                        if(i==3) $('#txtChoiceD').val(choice);
+                        if(i==4) $('#txtChoiceE').val(choice);
+                    }
+                }
+            }
+        }
 
-        $('#txtSingleAnswer').val(item.singleAnswer);
-        $('#txtAnswerA').val(item.answerA);
-        $('#txtAnswerB').val(item.answerB);
-        $('#txtAnswerC').val(item.answerC);
-        $('#txtAnswerD').val(item.answerD);
-        $('#txtAnswerE').val(item.answerE);
+        if(item.answers){
+            if('MULTIPLE_ANSWERS'==item.answer_type){
+                for(var i=0; i < item.answers.length; i++){
+                    var answer = item.answers[i];
+                    if(''!=answer){
+                        if(i==0) $('#txtAnswerA').val(answer);
+                        if(i==1) $('#txtAnswerB').val(answer);
+                        if(i==2) $('#txtAnswerC').val(answer);
+                        if(i==3) $('#txtAnswerD').val(answer);
+                        if(i==4) $('#txtAnswerE').val(answer);
+                    }
+                }
+            }
+            else if('SINGLE_ANSWER'==item.answer_type){
+                var answer = item.answers[0];
+                $('#txtSingleAnswer').val(answer);
+            }
+            else if('BOOLEAN'==item.answer_type){
+                var answer = item.answers[0];
+                $("input[name=bChoice][value='" + answer + "']").prop("checked",true);
+            }
+        }
 
         $('#myModal').modal('show');
 
@@ -301,13 +327,16 @@ var postTopic = function(){
             jtopic: JSON.stringify(topic)
         };
 
-        $.post( "/saveTopic", my_data, function( msg ) {
-            bootbox.alert(msg);
-            clearTopicFields();
-        }, "json");
+        if(topic.items && 0 < topic.items.length){
+            $.post( "/saveTopic", my_data, function( msg ) {
+                bootbox.alert(msg);
+                clearTopicFields();
+            }, "json");
+        }
+        else
+            bootbox.alert("Please enter some questions.");
     }
-    else {
+    else
         bootbox.alert("Please fill up all topic fields.");
-    }
 
 };

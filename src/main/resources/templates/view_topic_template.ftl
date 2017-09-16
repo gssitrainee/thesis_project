@@ -10,6 +10,12 @@
         <link href="css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="css/font-awesome.min.css">
         <link rel="stylesheet" href="css/topics.css">
+
+        <style>
+            input[type='radio'], input[type='checkbox'] {
+                margin-right: 10px;
+            }
+        </style>
     </head>
     <body>
         <@t.navigationDiv />
@@ -20,6 +26,11 @@
                     <div class="panel panel-info">
                         <h4>Topic</h4>
                         <div class="panel-body" style="border-right: 1px solid #eee;">
+                            <input type="hidden" id="hndTopicId" name="topicId" value="${topicId}" />
+                            <input type="hidden" id="hndCourseCode" name="courseCode" value="${courseCode}" />
+                            <input type="hidden" id="hndStudent" name="student" value="${student}" />
+                            <input type="hidden" id="hndStudentName" name="studentName" value="${studentName}" />
+
                             <div class="form-group has-error has-feedback">
                                 <label for="txtClass" class="col-md-3 control-label">Course</label>
                                 <div class="col-md-11">
@@ -59,33 +70,39 @@
                         <h4>Questions</h4>
                         <div class="panel-body underlined" style="border-right: 1px solid #eee;">
                             <#if items??>
-                                <ol class="list-group" type="1.">
+                                <ol id="lstQuestions" class="list-group" type="1.">
                                     <#list items as i>
-                                        <li><span>${i.question}</span>
+                                        <li>
+                                            <span>${i.question}</span>
+                                            <input type="hidden" class="itemId" value="${i.id}" />
+                                            <input type="hidden" class="answerType" value="${i.answer_type}" />
                                             <section>
-                                                <input type="hidden" value="${i.id}" />
                                                 <p>
-                                                    <ul>
-                                                        <#if i.choiceA??>
-                                                            <li>${i.choiceA}</li>
-                                                        </#if>
-                                                        <#if i.choiceB??>
-                                                            <li>${i.choiceB}</li>
-                                                        </#if>
-                                                        <#if i.choiceC??>
-                                                            <li>${i.choiceC}</li>
-                                                        </#if>
-                                                        <#if i.choiceD??>
-                                                            <li>${i.choiceD}</li>
-                                                        </#if>
-                                                        <#if i.choiceE??>
-                                                            <li>${i.choiceE}</li>
-                                                        </#if>
-                                                    </ul>
-                                                </p>
-                                                <p>
-                                                    <label for="txtSAnswer"><strong>Answer:</strong></label>
-                                                    <input type="text" id="txtSAnswer" name="answer" />
+                                                    <#if i.answer_type?? && 'SINGLE_ANSWER'==i.answer_type>
+                                                        <ul style="list-style: none;">
+                                                            <#if i.choices??>
+                                                                <#list i.choices as c>
+                                                                    <li><label><input type="radio" name="${i.id}" value="${c}">${c}</label></li>
+                                                                </#list>
+                                                            </#if>
+                                                        </ul>
+                                                    <#elseif i.answer_type?? && 'MULTIPLE_ANSWERS'==i.answer_type>
+                                                        <ul style="list-style: none;">
+                                                            <#if i.answers??>
+                                                                <#list i.choices as c>
+                                                                    <li><label><input type="checkbox" name="${i.id}" value="${c}">${c}</label></li>
+                                                                </#list>
+                                                            </#if>
+                                                        </ul>
+                                                    <#elseif i.answer_type?? && 'BOOLEAN'==i.answer_type>
+                                                        <ul style="list-style: none;">
+                                                            <#if i.choices??>
+                                                                <#list i.choices as c>
+                                                                    <li><label><input type="radio" name="${i.id}" value="${c}">${c}</label></li>
+                                                                </#list>
+                                                            </#if>
+                                                        </ul>
+                                                    </#if>
                                                 </p>
                                             </section>
                                         </li>
@@ -97,6 +114,16 @@
 
                     </div>
                 </div>
+
+                <div class="row top-space">
+                    <div class="form-group">
+                        <!-- Button -->
+                        <div class="col-md-offset-3 col-md-11">
+                            <button type="button" class="btn btn-primary btn-lg" onclick="submitTopicQuiz()">Submit Answers</button>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
         </div>

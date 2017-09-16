@@ -53,7 +53,7 @@ public class TopicDAO {
     public List<Document> findByClassCodeDateDescending(String classCode) {
         return topicCollection.find(eq("classCode", classCode))
                 .sort(Sorts.descending("creationDate"))
-                .limit(10)
+                .limit(20)
                 .into(new ArrayList<>());
     }
 
@@ -86,7 +86,7 @@ public class TopicDAO {
                 System.out.println("Removing topic('" + id + "'): ");
                 return true;
             } catch (Exception e) {
-                System.out.println("Error topic('" + id + "')");
+                System.out.println("Error removing topic('" + id + "')");
             }
         }
         return false;

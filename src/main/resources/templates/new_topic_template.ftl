@@ -105,7 +105,6 @@
                         <div class="form-group">
                             <label for="txtQuestion" class="control-label">Problem:</label>
                             <div>
-                                <#--<input type="text" id="txtQuestion" class="form-control" name="question" placeholder="Question" title="Enter Question (Sentence)" />-->
                                 <textarea class="form-control" id="txtQuestion" name="question" placeholder="Question" title="Enter Question (Sentence)"></textarea>
                             </div>
                         </div>
@@ -124,11 +123,11 @@
 
                         <div id="divBooleanChoices" class="form-group">
                             <div class="radio">
-                                <input type="radio" id="rdbTrue" name="bChoice" value="T" />
+                                <input type="radio" id="rdbTrue" name="bChoice" value="True" />
                                 <label for="rdbTrue" class="radio-inline">True</label>
                             </div>
                             <div class="radio">
-                                <input type="radio" id="rdbFalse" name="bChoice" value="F" />
+                                <input type="radio" id="rdbFalse" name="bChoice" value="False" />
                                 <label for="rdbFalse" class="radio-inline">False</label>
                             </div>
                         </div>

@@ -4,61 +4,37 @@
 
 * JSON: Student - Teacher Registration (Users) - [DONE]
 
-[
-    {
-        "_id" : "jpagduma",
-        "firstName": "John Patrick",
-        "lastName": "Agduma",
-        "password" : "BSnvv73vv70+Pe+/ve+/vUDvv71q77+9Z1Pvv73vv70=,-1290928513",
-        "email" : "jpagduma@gmail.com",
-        "userType" : "S",
-        "classes": [ "cs56_092017", "cs42_092017" ]
-    },
-    {
-        "_id" : "ejsalipahmad",
-        "firstName": "Eric Jose",
-        "lastName": "Salip Ahmad",
-        "password" : "77+9Ghjvv73vv73GkO+/vTjvv701aTcI77+9dA==,-2068170197",
-        "email" : "ejsalipahmad@gmail.com",
-        "userType" : "T",
-        "classes": [ "cs56_062016", "cs56_092017", "cs42_092017" ]
-    }
-]
+{
+    "_id" : "ejsalipahmad",
+    "password" : "HTTvv73vv70g77+9dXDvv73vv70jDzNBy6A=,-769841482",
+    "firstName" : "Eric Jose",
+    "lastName" : "Salip Ahmad",
+    "email" : "ejsalipahmad@gmail.com",
+    "userType" : "T",
+    "isActive" : true,
+    "classes" : [
+        "CS21",
+        "CS22",
+        "CS57",
+        "CS44",
+        "KS69"
+    ]
+}
+
 
 
 
 
 * JSON: Teacher Registers Class (classes) - [DONE]
 
-[
-    {
-        "_id" : ObjectId("59932c1d6f04075c65f7a425"),
-        "teacher" : "ejsalipahmad",
-        "classCode" : "CS56",
-        "className" : "Software Engineering",
-        "classDescription" : "Introduction to Software Engineering",
-        "creationDate" : ISODate("2017-08-15T17:15:09.339Z"),
-        "lastModifiedDate" : ISODate("2017-08-15T17:15:09.339Z")
-    },
-    {
-        "_id" : ObjectId("59932c846f04075d560e51ee"),
-        "teacher" : "ejsalipahmad",
-        "classCode" : "CS42",
-        "className" : "Multimedia 1",
-        "classDescription" : "Multimedia - 2 Dimension (Animation)",
-        "creationDate" : ISODate("2017-08-15T17:16:52.401Z"),
-        "lastModifiedDate" : ISODate("2017-08-15T18:02:16.860Z")
-    },
-    {
-        "_id" : ObjectId("59932c1d6f04075c65f7a425"),
-        "teacher" : "ejsalipahmad",
-        "classCode" : "CS56",
-        "className" : "Software Engineering",
-        "classDescription" : "Introduction to Software Engineering",
-        "creationDate" : ISODate("2017-08-15T17:15:09.339Z"),
-        "lastModifiedDate" : ISODate("2017-08-15T17:15:09.339Z")
-    }
-]
+{
+    "_id" : "CS21",
+    "teacher" : "ejsalipahmad",
+    "className" : "Programming 101",
+    "classDescription" : "Introduction to Programming 1",
+    "instructor" : "Eric Jose Salip Ahmad",
+    "lastModifiedDate" : ISODate("2017-09-05T06:22:57.630Z")
+}
 
 
 
@@ -76,17 +52,14 @@
 * JSON: Student enrolls to Class (course_enrollment) - [DONE]
 
 {
-    {
-        _id : ObjectId("59ab266dbf2ead38a89c2734"),
-        student : "jpagduma",
-        studentName : "John Patrick Agduma",
-        class : "KS69",
-        className : "Kamasutra",
-        teacher : "jbastos",
-        teacherName : "Juan Bastos",
-        registrationDate : 2017-09-03 05:45:17.202,
-        status : "OPEN"
-    }
+    "_id" : ObjectId("59ae4731ec135a0d92979adc"),
+    "student" : "kringlets",
+    "studentName" : "Angelie Claire Marcha",
+    "class" : "TTL101",
+    "className" : "Logic Design 1",
+    "teacher" : "coolboy",
+    "teacherName" : "Alain Encabo",
+    "registrationDate" : ISODate("2017-09-05T06:41:53.102Z")
 }
 
 
@@ -96,28 +69,87 @@ Note: Push class elements to users.classes array.
 
 [
     {
-        "_id" : "jpagduma",
-        "firstName": "John Patrick",
-        "lastName": "Agduma",
-        "password" : "BSnvv73vv70+Pe+/ve+/vUDvv71q77+9Z1Pvv73vv70=,-1290928513",
-        "email" : "jpagduma@gmail.com",
-        "userType" : "S",
-        "classes": [
-            { "code": "cs56_092017", "name": "Operating System (September 2017)"}, 
-            { "code" : cs42_092017", "name": "Graphics Design (September 2017)"}
+        "_id" : "ejsalipahmad",
+        "password" : "HTTvv73vv70g77+9dXDvv73vv70jDzNBy6A=,-769841482",
+        "firstName" : "Eric Jose",
+        "lastName" : "Salip Ahmad",
+        "email" : "ejsalipahmad@gmail.com",
+        "userType" : "T",
+        "isActive" : true,
+        "classes" : [
+            "CS21",
+            "CS22",
+            "CS57",
+            "CS44",
+            "KS69"
         ]
     },
     {
-        "_id" : "ejsalipahmad",
-        "firstName": "Eric Jose",
-        "lastName": "Salip Ahmad",
-        "password" : "77+9Ghjvv73vv73GkO+/vTjvv701aTcI77+9dA==,-2068170197",
-        "email" : "ejsalipahmad@gmail.com",
+        "_id" : "borgymanotoy",
+        "password" : "PxXvv71g77+977+977+9e++/vUDvv73KkTjvv73vv70=,-1226018399",
+        "firstName" : "Borgy",
+        "lastName" : "Manotoy",
+        "email" : "borgymanotoy@pogi.ph",
         "userType" : "T",
-        "classes": [
-            { "code": "cs56_062016", "name": "Operating System (June 2016)"}, 
-            { "code": "cs56_092017", "name": "Operating System (September 2017)"}, 
-            { "code" : cs42_092017", "name": "Graphics Design (September 2017)"}
+        "isActive" : true,
+        "classes" : [
+            "CS56",
+            "CompEd 03",
+            "CS42"
+        ]
+    },
+    {
+        "_id" : "coolboy",
+        "password" : "77+977+977+9aD1P77+9dBXvv70qRu+/vRxBGw==,-919533630",
+        "firstName" : "Alain",
+        "lastName" : "Encabo",
+        "email" : "alain_encabo@gmail.com",
+        "userType" : "T",
+        "isActive" : true,
+        "classes" : [
+            "TTL101",
+            "TTL102",
+            "CS51"
+        ]
+    },
+    {
+        "_id" : "luther_dimaano",
+        "password" : "Zt6Hfe+/ve+/vd2977+9Lx5RVk0S77+9,-648277228",
+        "firstName" : "Luther",
+        "lastName" : "Dimaano",
+        "email" : "budi.dimaano@gmail.com",
+        "userType" : "T",
+        "isActive" : true,
+        "classes" : [
+            "CS52",
+            "CT11"
+        ]
+    },
+    {
+        "_id" : "jpagduma",
+        "password" : "ecipzIRu77+9GgTvv70H2KBiI++/vQ==,-232858512",
+        "firstName" : "John Patrick",
+        "lastName" : "Agduma",
+        "email" : "jpagduma@gmail.com",
+        "userType" : "S",
+        "isActive" : true,
+        "classes" : [
+            "CS21",
+            "CS44",
+            "CS42"
+        ]
+    },
+    {
+        "_id" : "kringlets",
+        "password" : "77+977+977+977+9awkfUnzvv71j77+9XHEJ,1074472841",
+        "firstName" : "Angelie Claire",
+        "lastName" : "Marcha",
+        "email" : "kring.marcha@gmail.com",
+        "userType" : "S",
+        "isActive" : true,
+        "classes" : [
+            "CS57",
+            "CS21"
         ]
     }
 ]
@@ -129,87 +161,197 @@ Note: Push class elements to users.classes array.
 * JSON: Post a Quiz (quiz) - [DONE]
 
 {
-	"_id" : "css3_crash_course",
-	"classCode" : "CS44",
-	"topic" : "CSS3 Crash Course",
-	"videoLink" : "https://www.youtube.com/watch?v=CUxH_rWSI1k",
-	"summary" : "Get the Transcription : http://goo.gl/1IuA2R\nWiki Colors : http://goo.gl/uoGQNt\nCSS Validator : http://goo.gl/qWQV0f\nBest CSS3 Book : http://goo.gl/8KjgNG\n\nSupport me on Patreon : https://www.patreon.com/derekbanas\n\n@import : 01:01\nSelecting Elements : 02:37\nPadding, Margin, Border : 09:00\nAbsolute Positioning : 18:40\nFixed Positioning : 21:00\nRelative Positioning : 21:56\nFloat : 23:15\nClip : 23:48\nOverflow : 25:20\nHTML5 Layouts : 26:06\nAlignment : 30:34\nLists : 32:00\nPseudo Classes : 33:17\nCounter Increment : 33:58\nCursors : 37:54\nOutline : 38:30\nButtons : 39:01\nSlide Show : 40:28\nText Decoration : 41:48\nWhitespace : 42:17\nTables : 43:33\nShadows : 45:08\nRGB : 47:22\nHSL : 48:04\nBorder Radius : 48:29\nGradient : 49:54\nScale : 52:26\nRotate : 52:56\nSkew : 53:10\nTranslate : 53:24\nTransitions : 53:37\nAnimations : 54:34\nFlex Box : 56:48",
-	"items" : [
-		{
-			"id" : "css_stands_for_what",
-			"question" : "CSS stands for what?",
-			"answer_type" : "SINGLE_ANSWER",
-			"choiceA" : "Cascaded Style Sheets",
-			"choiceB" : "Common Style Sheets",
-			"choiceC" : "Computerized Style Sheets",
-			"singleAnswer" : "Cascaded Style Sheets"
-		},
-		{
-			"id" : "what_is_the_current_version_of_css3",
-			"question" : "What is the current version of CSS3?",
-			"answer_type" : "SINGLE_ANSWER",
-			"choiceA" : "1",
-			"choiceB" : "2",
-			"choiceC" : "3",
-			"choiceD" : "4",
-			"choiceE" : "5",
-			"singleAnswer" : "3"
-		},
-		{
-			"id" : "css_is_used_for_styling",
-			"question" : "CSS is used for styling?",
-			"answer_type" : "BOOLEAN",
-			"booleanValue" : "T"
-		},
-		{
-			"id" : "we_can_add_or_call_a_css_file_into_our_html_file",
-			"question" : "We can add or call a CSS file into our HTML file.",
-			"answer_type" : "BOOLEAN",
-			"booleanValue" : "T"
-		},
-		{
-			"id" : "css_are_generated_by_the_server_by_default",
-			"question" : "CSS are generated by the server by default.",
-			"answer_type" : "BOOLEAN",
-			"booleanValue" : "F"
-		}
-	],
-	"creationDate" : "2017-09-11T15:04:47.132Z"
+    "_id" : "test_driven_development_vs_behaviour_driven_development",
+    "classCode" : "CS21",
+    "topic" : "Test Driven Development vs Behaviour Driven Development",
+    "videoLink" : "https://www.youtube.com/watch?v=4QFYTQy47yA",
+    "summary" : "I tried to hang this shelf on this wall. I made a mess of it. The shelf was wonky. Could Test Driven Development - or even Behaviour Driven Development - have saved the day Shelving ----- A couple of episodes ago, I went through the process of hanging a shelf in what looked suspiciously like a Waterfall process: I did all of the measuring all of the transferring all of the drilling popped in all of the wall plugs and brute-forced the screws in. Alas, the end result was not good: the shelf was not level. But it got me thinking. Could tests have saved the day Is it possible to hang a shelf in a test-driven way Is it possible to hang a shelf in a behaviour-driven way I think we should find out. Test Driven Development (TDD) ---- Here's me hanging a shelf in my waterfall-like style. Let's stop it... there. Here's an opportunity for a test: I could come back at any time and check that the line really is level. That could be the first unit test. More marking and measuring. Stop there. Lots of opportunities for unit tests here: one for each of these measurements. What happened next  Oh yes... I drilled all the holes. I popped in all the wall plugs. Stop. This is certainly a point where the unit tests could - and should - be performed. But it's actually a few steps too late. I've done far too much work between tests. Lets rewind a bit. Drill one hole (only). And perform the  \"unit  tests\" to ensure the hole went in in the right place. If the test fails -  if the hole has gone in the wrong place - now's the time to fix it: there's no point  in continuing until all the tests pass. Once the tests are passing, we can move on. Drill another hole. Run the tests. Correct as necessary. And so on until we have all four holes drilled - and tested. In with the four plugs. No harm in repeating the \"unit tests\"... but it's most likely that all would pass. And we're now in a position to finish the job. In go the screws. Unfortunately, it's no longer trivial to run our unit tests. But there is another test we can run: we can check for level. And given that we've had \"green lights\" up to this point, the chances are that this test will pass too. And it does. The shelf is perfectly flat. Behaviour Driven Development (BDD) --- So much for Test Driven Development; what about Behaviour Driven Development A shelf is a bit passive. It doesn't have have much in the way of behaviours. But if we are generous with our definitions, we could say that a desirable behaviour is that anything that are put on it should not slide off. Or put it another way, the shelf should be level. It can be argued, then, that testing the shelf for level is not only a unit test; it's also a behavioural test. In the sequence we've been through, this \"behavioural  test\" was the last thing that we did. AFTER all the work had been done. The very opposite of \"behaviour driven\". Is behaviour driven development even possible in this case Turns out that the method my dad used to hang a shelf looks a lot like a behaviour-driven process: First step is marking the centre of the shelf. We could have a test for that - to verify that the mark really is in the centre of the shelf. That would be a unit test. (It's the first and last time we'll come across a unit test in the sequence.) Moving on... Check for level. That's the behavioural test. There it is again. This time it fails. Again, no point in continuing until \"all the tests are passing\". A quick tap with a mallet. Run the tests again  - this time passing. Which means we can move on. There's the behavioural test again. And again one final time. Success! --- Would you believe it: It is possible to hang a shelf in a test-driven development way. AND its also possible to hang a shelf in a behaviour-driven way.",
+    "items" : [
+        {
+            "id" : "what_does_bdd_stands_for",
+            "question" : "What does BDD stands for?",
+            "answer_type" : "SINGLE_ANSWER",
+            "choices" : [
+                "Binary Design Development",
+                "Binary Development Design",
+                "Behavior Driven Design",
+                "Behavior Design Driven",
+                "Behavior Driven Development"
+            ],
+            "answers" : [
+                "Behavior Driven Development"
+            ]
+        },
+        {
+            "id" : "what_does_tdd_stands_for",
+            "question" : "What does TDD stands for?",
+            "answer_type" : "SINGLE_ANSWER",
+            "choices" : [
+                "Test Driven Deficiency",
+                "Test Driven Development",
+                "Test Deficiency Development",
+                "Test Drive Development",
+                "None of the Above"
+            ],
+            "answers" : [
+                "Test Driven Development"
+            ]
+        },
+        {
+            "id" : "unit_test_is_the_basic_unit_of_bdd",
+            "question" : "Unit Test is the basic unit of BDD.",
+            "answer_type" : "BOOLEAN",
+            "choices" : [
+                "True",
+                "False"
+            ],
+            "answers" : [
+                "False"
+            ]
+        }
+    ],
+    "creationDate" : "2017-09-15T11:44:35.754Z"
 }
 
 
 
+* JSON: Student Takes Quiz (topic_quiz) - [DONE]
 
-* JSON: Student Takes Quiz (class_quiz) - [TODO]
-
-[
-    {
-        quiz_id: "quiztest1234",
-        student_id: student102,
-        student_name: "Niko Mateo",
-        class_code: cs56,
-        class_name: "Multimedia",
-        score: 0,
-        items: [
-            { "question": "What is the center of the solar system?", answers: ["c"], correct_answers: ["a"], score_point: 0 },
-            { "question": "Who is the philippines national traitor?", answers: ["d"], correct_answers: ["c"], score_point: 0 }
-            { "question": "___ is a member of the ninja turtles.", answers: ["b", "c"], correct_answers: ["a", "b", "c", "d"], score_point: 0 }
-        ]
-    },
-    {
-        quiz_id: "quiztest1234",
-        student_id: student101,
-        student_name: "John Patrick Agduma",
-        class_code: cs56,
-        class_name: "Multimedia",
-        score: 3,
-        items: [
-            { "question": "What is the center of the solar system?", answers: ["a"], correct_answers: ["a"], score_point: 1 },
-            { "question": "Who is the philippines national traitor?", answers: ["c"], correct_answers: ["c"], score_point: 1 }
-            { "question": "___ is a member of the ninja turtles.", answers: ["a", "b", "c", "d"], correct_answers: ["a", "b", "c", "d"], score_point: 1 }
-        ]
-    }
-]
+{
+    "_id" : ObjectId("59bd7ccc3b2add6f56b6da48"),
+    "topicId" : "agile_software_development",
+    "courseCode" : "CS21",
+    "courseName" : "Programming 101",
+    "student" : "kringlets",
+    "studentName" : "Angelie Claire Marcha",
+    "questions" : [
+        {
+            "id" : "describes_a_set_of_values_and_principles_for_software_development_under_which_requirements_and_solutions_evolve_through_the_collaborative_effort_of_selforganizing_crossfunctional_teams",
+            "answers" : [
+                "Agile Software Development"
+            ],
+            "solutions" : [
+                "Agile Software Development"
+            ],
+            "itemAnswerCorrect" : true
+        },
+        {
+            "id" : "select_agile_software_development_values",
+            "answers" : [
+                "Individuals and Interactions",
+                "Working Software",
+                "Customer Collaboration",
+                "Responding to Change",
+                "Iterative, incremental and evolutionary"
+            ],
+            "solutions" : [
+                "Responding to Change",
+                "Customer Collaboration",
+                "Working Software",
+                "Individuals and Interactions"
+            ],
+            "itemAnswerCorrect" : false
+        },
+        {
+            "id" : "a_value_that_means_requirements_cannot_be_fully_collected_at_the_beginning_of_the_software_development_cycle_so_it_is_better_to_directly_involve_the_paying_customer_and_their_endusers_or_a_proxy_for_them_so_that_detailed_requirements_can_be_progressively_elaborated_and_adapted_based_on_feedback",
+            "answers" : [
+                "Working software"
+            ],
+            "solutions" : [
+                "Customer collaboration"
+            ],
+            "itemAnswerCorrect" : false
+        },
+        {
+            "id" : "specific_tools_and_techniques_such_as_continuous_integration_automated_unit_testing_pair_programming_testdriven_development_design_patterns_domaindriven_design_code_refactoring_and_other_techniques_are_often_used_to_improve_quality_and_enhance_product_development_agility",
+            "answers" : [
+                "False"
+            ],
+            "solutions" : [
+                "True"
+            ],
+            "itemAnswerCorrect" : false
+        },
+        {
+            "id" : "one_of_the_differences_between_agile_software_development_methods_and_waterfall_is_the_approach_to_quality_and_testing",
+            "answers" : [
+                "True"
+            ],
+            "solutions" : [
+                "True"
+            ],
+            "itemAnswerCorrect" : true
+        }
+    ],
+    "topicScore" : 2
+},
+{
+    "_id" : ObjectId("59bd7cf03b2add6f56b6da49"),
+    "topicId" : "agile_software_development",
+    "courseCode" : "CS21",
+    "courseName" : "Programming 101",
+    "student" : "jpagduma",
+    "studentName" : "John Patrick Agduma",
+    "questions" : [
+        {
+            "id" : "describes_a_set_of_values_and_principles_for_software_development_under_which_requirements_and_solutions_evolve_through_the_collaborative_effort_of_selforganizing_crossfunctional_teams",
+            "answers" : [
+                "Agile Software Development"
+            ],
+            "solutions" : [
+                "Agile Software Development"
+            ],
+            "itemAnswerCorrect" : true
+        },
+        {
+            "id" : "select_agile_software_development_values",
+            "answers" : [
+                "Individuals and Interactions",
+                "Working Software",
+                "Customer Collaboration",
+                "Responding to Change"
+            ],
+            "solutions" : [
+                "Responding to Change",
+                "Customer Collaboration",
+                "Working Software",
+                "Individuals and Interactions"
+            ],
+            "itemAnswerCorrect" : true
+        },
+        {
+            "id" : "a_value_that_means_requirements_cannot_be_fully_collected_at_the_beginning_of_the_software_development_cycle_so_it_is_better_to_directly_involve_the_paying_customer_and_their_endusers_or_a_proxy_for_them_so_that_detailed_requirements_can_be_progressively_elaborated_and_adapted_based_on_feedback",
+            "answers" : [
+                "Customer collaboration"
+            ],
+            "solutions" : [
+                "Customer collaboration"
+            ],
+            "itemAnswerCorrect" : true
+        },
+        {
+            "id" : "specific_tools_and_techniques_such_as_continuous_integration_automated_unit_testing_pair_programming_testdriven_development_design_patterns_domaindriven_design_code_refactoring_and_other_techniques_are_often_used_to_improve_quality_and_enhance_product_development_agility",
+            "answers" : [
+                "True"
+            ],
+            "solutions" : [
+                "True"
+            ],
+            "itemAnswerCorrect" : true
+        },
+        {
+            "id" : "one_of_the_differences_between_agile_software_development_methods_and_waterfall_is_the_approach_to_quality_and_testing",
+            "answers" : [
+                "True"
+            ],
+            "solutions" : [
+                "True"
+            ],
+            "itemAnswerCorrect" : true
+        }
+    ],
+    "topicScore" : 5
+}
 
 
 [QUERIES]:

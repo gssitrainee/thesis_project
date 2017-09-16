@@ -34,8 +34,6 @@ public class CourseDAO {
         if(null!=searchKey && !"".equals(searchKey)){
             //{ "$or": [{ "classCode" : { "$regex" : "ttl" , "$options" : "i"}}, { "className" : { "$regex" : "ttl" , "$options" : "i"}}] }
             //db.classes.find({ "$or": [{ "classCode" : { "$regex" : "ttl" , "$options" : "i"}}, { "className" : { "$regex" : "ttl" , "$options" : "i"}}] });
-
-
             return classCollection.find(or(regex("_id", searchKey, "i"), regex("className", searchKey, "i"))).into(new ArrayList<>());
         }
 

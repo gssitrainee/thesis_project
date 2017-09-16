@@ -362,51 +362,6 @@ public class ProjectController implements Mapper{
         }, new FreeMarkerTemplateEngine());
 
 
-        // handle the new class registration
-/*        post("saveCourseDetails", (request, response) -> {
-            Map<String, Object> attributes = new HashMap<>();
-
-            String classCode = StringEscapeUtils.escapeHtml4(request.queryParams("classCode"));
-            String className = StringEscapeUtils.escapeHtml4(request.queryParams("className"));
-            String classDescription = StringEscapeUtils.escapeHtml4(request.queryParams("classDescription"));
-
-            Document user = null;
-            String sessionId = ResourceUtilities.getSessionCookie(request);
-            String username = sessionDAO.findUserNameBySessionId(sessionId);
-            attributes.put("sessionId", sessionId);
-
-            if(null!=username) {
-                user = userDAO.getUserInfo(username);
-
-                if (classCode.equals("") || className.equals("") || classDescription.equals("")) {
-                    // redisplay page with errors
-                    attributes.put("errors", "Please complete class details.");
-                    attributes.put("classCode", classCode);
-                    attributes.put("className", className);
-                    attributes.put("classDescription", classDescription);
-                    attributes.put("username", username);
-                }
-                else {
-                    String msg;
-                    if(courseDAO.saveClass(username, classCode, className, classDescription, user.getString("firstName") + " " + user.getString("lastName")) && userDAO.addUserClasses(username, classCode, className))
-                        msg = "Successfully saved class(course).";
-                    else
-                        msg = "Problem saving class(course).";
-
-                    request.session().attribute("status_msg", msg);
-
-                    // now redirect back to home
-                    response.redirect("/");
-                }
-            }
-            else
-                response.redirect("/login");
-
-
-            return new ModelAndView(attributes, "course_template.ftl");
-        }, new FreeMarkerTemplateEngine());*/
-
-
         // will present the form used to process get and display class using class code
         get("course", (request, response) -> {
             Map<String, Object> attributes = new HashMap<>();
@@ -548,7 +503,7 @@ public class ProjectController implements Mapper{
                 attributes.put("userClasses", userClasses);
             }
 
-            return new ModelAndView(attributes, "new_quiz_template.ftl");
+            return new ModelAndView(attributes, "new_topic_template.ftl");
         }, new FreeMarkerTemplateEngine());
 
 
@@ -570,20 +525,22 @@ public class ProjectController implements Mapper{
                     attributes.put("userType", user.getString("userType"));
                     attributes.put("hdrLink", "");
                     attributes.put("hdrLabel", "Welcome " + (user.getString("firstName") + " " + user.getString("lastName")));
+                    attributes.put("student", username);
+                    attributes.put("studentName", (user.getString("firstName") + " " + user.getString("lastName")));
                 }
 
                 String topicId = StringEscapeUtils.escapeHtml4(request.queryParams("tid"));
 
-                System.out.println("\n\n");
-                System.out.println("VIEW-TOPIC");
-                System.out.println("---------------------------------------------");
-                System.out.println("[TOPIC-ID]: " + topicId);
-                System.out.println("---------------------------------------------");
-                System.out.println("\n\n");
+//                System.out.println("\n\n");
+//                System.out.println("VIEW-TOPIC");
+//                System.out.println("---------------------------------------------");
+//                System.out.println("[TOPIC-ID]: " + topicId);
+//                System.out.println("---------------------------------------------");
+//                System.out.println("\n\n");
 
                 if(null!=topicId){
                     Document docTopic = topicDAO.findById(topicId);
-                    System.out.println("TOPIC: " + docTopic.toJson());
+//                    System.out.println("TOPIC: " + docTopic.toJson());
                     if(null!=docTopic){
                         attributes.put("topicId", docTopic.getString("_id"));
 
@@ -592,13 +549,14 @@ public class ProjectController implements Mapper{
                             Document docCourse = courseDAO.findById(classCode);
                             if(null!=docCourse){
                                 String course = docCourse.getString("className");
+                                attributes.put("courseCode", classCode);
                                 attributes.put("course", course);
                             }
                         }
 
-                        System.out.println("[topic]: " + docTopic.getString("topic"));
-                        System.out.println("[videoLink]: " + docTopic.getString("videoLink"));
-                        System.out.println("[summary]: " + docTopic.getString("summary"));
+//                        System.out.println("[topic]: " + docTopic.getString("topic"));
+//                        System.out.println("[videoLink]: " + docTopic.getString("videoLink"));
+//                        System.out.println("[summary]: " + docTopic.getString("summary"));
 
 
                         attributes.put("topic", docTopic.getString("topic"));
@@ -606,7 +564,7 @@ public class ProjectController implements Mapper{
                         attributes.put("videoLink", docTopic.getString("videoLink"));
 
                         ArrayList<Document> items =  (ArrayList) docTopic.get("items");
-                        System.out.println("items.count: " + items.size());
+//                        System.out.println("items.count: " + items.size());
 
                         attributes.put("items", items);
                     }

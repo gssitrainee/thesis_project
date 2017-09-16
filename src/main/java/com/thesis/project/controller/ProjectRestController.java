@@ -1,22 +1,21 @@
 package com.thesis.project.controller;
 
 import com.google.gson.Gson;
-import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.util.JSON;
 import com.thesis.project.dao.*;
 import com.thesis.project.model.Topic;
+import com.thesis.project.model.TopicQuiz;
 import com.thesis.project.util.ResourceUtilities;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.bson.Document;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.thesis.project.util.JsonUtil.json;
-import static spark.Spark.after;
 import static spark.Spark.get;
 import static spark.Spark.post;
 
@@ -25,6 +24,7 @@ public class ProjectRestController implements Mapper {
     private final CourseDAO courseDAO;
     private final CourseEnrollmentDAO courseEnrollmentDAO;
     private final TopicDAO topicDAO;
+    private final TopicQuizDAO topicQuizDAO;
     private final UserDAO userDAO;
     private final SessionDAO sessionDAO;
 
@@ -35,6 +35,7 @@ public class ProjectRestController implements Mapper {
         courseDAO = new CourseDAO(projectDatabase);
         courseEnrollmentDAO = new CourseEnrollmentDAO(projectDatabase);
         topicDAO = new TopicDAO(projectDatabase);
+        topicQuizDAO = new TopicQuizDAO(projectDatabase);
         userDAO = new UserDAO(projectDatabase);
         sessionDAO = new SessionDAO(projectDatabase);
 
@@ -79,22 +80,22 @@ public class ProjectRestController implements Mapper {
                 Document user = userDAO.getUserInfo(username);
 
                 if(null!=user){
+                    String classCode = StringEscapeUtils.escapeHtml4(request.queryParams("cc"));
                     String studentName = user.getString("firstName") + " " + user.getString("lastName");
-                    boolean allowClassEnrollment = false;
+                    boolean allowClassEnrollment = true;
                     ArrayList enrolledClasses =  (ArrayList) user.get("classes");
                     if(null!=enrolledClasses){
                         System.out.println("there are enrolled classes");
                         for(Object o : enrolledClasses){
                             System.out.println("[Class]: " + o.toString());
+                            if(o.toString().equalsIgnoreCase(classCode)){
+                                allowClassEnrollment = false;
+                                break;
+                            }
                         }
-                    }
-                    else {
-                        System.out.println("student not enrolled in any class.");
-                        allowClassEnrollment = true;
                     }
 
                     if(allowClassEnrollment){
-                        String classCode = StringEscapeUtils.escapeHtml4(request.queryParams("cc"));
                         //TODO: Check if student is currently enrolled in selected class, if not ENROLL to class. Otherwise, return error "Currently Enrolled to Class".
 
                         System.out.println("[class-code]: " + classCode);
@@ -205,6 +206,60 @@ public class ProjectRestController implements Mapper {
                 return "Unable to save topic.";
         }, json());
 
+        post("/submitTopicAnswers", (request, response) -> {
+            Gson gson = new Gson();
+            TopicQuiz topicQuiz = gson.fromJson(request.body(), TopicQuiz.class);
+            boolean success = false;
+            int score = 0;
+            if(null!=topicQuiz.getTopicId()){
+                Document docTopic = topicDAO.findById(topicQuiz.getTopicId());
+
+                if(null!=topicQuiz.getQuestions()){
+                    for(TopicQuiz.Question q : topicQuiz.getQuestions()){
+                        List<String> answers = q.getAnswers();
+                        List<String> solutions = getTopicItemAnswers(docTopic, q.getId());
+                        q.setSolutions(solutions);
+                        if((null!=answers && null!=solutions) && (answers.size() == solutions.size())){
+                            boolean allEqual = true;
+                            for(String s : answers){
+                                if(!stringElementExists(solutions, s)){
+                                    allEqual = false;
+                                    break;
+                                }
+                            }
+                            if(allEqual) score++;
+                            q.setItemAnswerCorrect(allEqual);
+                        }
+                    }
+                }
+
+                topicQuiz.setTopicScore(score);
+
+                String jsonString = topicQuiz.toString();
+                if(null!=jsonString){
+                    Document dTopic = Document.parse(jsonString);
+                    if(null!=dTopic){
+
+                        System.out.println("[course]: " + dTopic.getString("courseCode"));
+                        System.out.println("[student]: " + dTopic.getString("student"));
+                        System.out.println("[topicId]: " + dTopic.getString("topicId"));
+
+                        Document existing = topicQuizDAO.findByTopicIdAndCourseAndStudent(dTopic.getString("topicId"), dTopic.getString("student"), dTopic.getString("courseCode"));
+                        if(null!=existing)
+                            return "Student already has taken the quiz.";
+                        else {
+                            success = topicQuizDAO.addTopicQuiz(dTopic);
+                        }
+                    }
+                }
+            }
+
+            if(success)
+                return "Successfully submitted topic answers!";
+            else
+                return "Unable to save topic answers!";
+
+        }, json());
 
         /*
             after((request, response) -> {
@@ -212,4 +267,35 @@ public class ProjectRestController implements Mapper {
             });
         */
     }
+
+    private boolean stringElementExists(List<String> list, String element){
+        if(null!=list && null!=element){
+            for(String s : list)
+                if(s.equalsIgnoreCase(element)) return true;
+        }
+        return false;
+    }
+    private List<String> getTopicItemAnswers(Document docTopic, String itemId){
+        List<String> answers = new ArrayList<>();
+        if(null!=docTopic && null!=itemId){
+            ArrayList<Document> arDocQuestions =  (ArrayList) docTopic.get("items");
+            if(null!=arDocQuestions){
+                for(Document d : arDocQuestions){
+                    String questionId = d.getString("id");
+                    if(questionId.equals(itemId)){
+                        ArrayList<Document> arDocAnswers =  (ArrayList) d.get("answers");
+                        if(null!=arDocAnswers){
+                            for(Object o : arDocAnswers)
+                                answers.add(o.toString());
+
+                            return answers;
+                        }
+                    }
+                }
+            }
+        }
+
+        return answers;
+    }
+
 }
