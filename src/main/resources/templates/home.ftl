@@ -79,7 +79,7 @@
                         <#if topics??>
                             <ul class="list-group">
                                 <#list topics as t>
-                                    <li class="list-group-item" onclick="window.location='/viewTopic?tid=${t["_id"]}'">(${t["classCode"]}) : ${t["topic"]}</li>
+                                    <li class="list-group-item" onclick="window.location='/viewTopic?tid=${t["_id"]}'">(${t["classCode"]}) : ${t["topic"]} <#if t["taken"]?? && t["taken"]><strong> - Taken</strong></#if></li>
                                 </#list>
                             </ul>
                         </#if>

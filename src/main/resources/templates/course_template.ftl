@@ -110,6 +110,7 @@
                             <th>Last Name</th>
                             <th>Email Address</th>
                             <th>Score</th>
+                            <th>Average</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -119,7 +120,8 @@
                                 <td>${student["firstName"]}</td>
                                 <td>${student["lastName"]}</td>
                                 <td>${student["email"]}</td>
-                                <td>N/A</td>
+                                <td>${student["totalScore"]?string["0.##"]}</td>
+                                <td>${student["totalAverage"]?string["0.##"]}</td>
                             </tr>
                             </#list>
                         <#else>

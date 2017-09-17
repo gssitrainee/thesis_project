@@ -134,7 +134,7 @@ var saveQuestion = function(){
         item.question = question;
     }
 
-    if(qType) item.answer_type = qType;
+    if(qType) item.answerType = qType;
 
     item.choices = choices;
     item.answers = answers;
@@ -193,10 +193,10 @@ var displayItemDetails = function(id){
     if(item){
         $('#hndId').val(item.id);
         $('#txtQuestion').val(item.question);
-        $('#selQuestionType').val(item.answer_type);
+        $('#selQuestionType').val(item.answerType);
 
         if(item.choices){
-            if('BOOLEAN'!=item.answer_type){
+            if('BOOLEAN'!=item.answerType){
                 for(var i=0; i < item.choices.length; i++){
                     var choice = item.choices[i];
                     if(''!=choice){
@@ -211,7 +211,7 @@ var displayItemDetails = function(id){
         }
 
         if(item.answers){
-            if('MULTIPLE_ANSWERS'==item.answer_type){
+            if('MULTIPLE_ANSWERS'==item.answerType){
                 for(var i=0; i < item.answers.length; i++){
                     var answer = item.answers[i];
                     if(''!=answer){
@@ -223,11 +223,11 @@ var displayItemDetails = function(id){
                     }
                 }
             }
-            else if('SINGLE_ANSWER'==item.answer_type){
+            else if('SINGLE_ANSWER'==item.answerType){
                 var answer = item.answers[0];
                 $('#txtSingleAnswer').val(answer);
             }
-            else if('BOOLEAN'==item.answer_type){
+            else if('BOOLEAN'==item.answerType){
                 var answer = item.answers[0];
                 $("input[name=bChoice][value='" + answer + "']").prop("checked",true);
             }
@@ -235,7 +235,7 @@ var displayItemDetails = function(id){
 
         $('#myModal').modal('show');
 
-        refreshAnswerFieldsByType(item.answer_type);
+        refreshAnswerFieldsByType(item.answerType);
     }
 };
 
@@ -319,16 +319,11 @@ var postTopic = function(){
         topic.videoLink = $('#txtVideoUrl').val();
         topic.summary = $('#txtTopicSummary').val();
         topic.items = items;
-        topic.creationDate = new Date();
 
         console.log(JSON.stringify(topic));
 
-        var my_data = {
-            jtopic: JSON.stringify(topic)
-        };
-
         if(topic.items && 0 < topic.items.length){
-            $.post( "/saveTopic", my_data, function( msg ) {
+            $.post( "/saveTopic", JSON.stringify(topic), function(msg) {
                 bootbox.alert(msg);
                 clearTopicFields();
             }, "json");

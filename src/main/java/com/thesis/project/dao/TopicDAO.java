@@ -57,6 +57,11 @@ public class TopicDAO {
                 .into(new ArrayList<>());
     }
 
+    public int getCourseTopicsCount(String classCode) {
+        List<Document> list = topicCollection.find(eq("classCode", classCode)).into(new ArrayList<>());
+        return null!=list ? list.size() : 0;
+    }
+
     public List<Document> findByClassesLatest(String[] classCodes) {
         //{ "classCode": { "$in": [ "CS21", "CS44" ] } }
         return topicCollection.find(in("classCode", classCodes))

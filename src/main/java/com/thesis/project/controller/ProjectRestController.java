@@ -13,6 +13,7 @@ import org.bson.Document;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static com.thesis.project.util.JsonUtil.json;
@@ -191,12 +192,13 @@ public class ProjectRestController implements Mapper {
 
 
         post("/saveTopic", (request, response) -> {
-            String json = request.queryParams("jtopic");
-
+            Gson gson = new Gson();
+            Topic topic = gson.fromJson(request.body(), Topic.class);
             boolean success = false;
-            Topic topic = null;
-            if(null!=json){
-                Document docTopic = Document.parse(json);
+
+            if(null!=topic){
+                topic.setCreationDate(new Date());
+                Document docTopic = Document.parse(topic.toString());
                 success = topicDAO.addTopic(docTopic);
             }
 

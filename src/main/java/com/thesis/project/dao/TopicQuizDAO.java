@@ -58,6 +58,12 @@ public class TopicQuizDAO {
     public List<Document> findByCourseCodeDateDescending(String courseCode) {
         return topicQuizCollection.find(eq("courseCode", courseCode))
                 .sort(descending("submissionDate"))
+                .into(new ArrayList<>());
+    }
+
+    public List<Document> findByStudentDateDescending(String student) {
+        return topicQuizCollection.find(eq("student", student))
+                .sort(descending("submissionDate"))
                 .limit(20)
                 .into(new ArrayList<>());
     }

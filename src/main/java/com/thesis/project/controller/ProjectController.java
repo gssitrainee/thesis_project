@@ -26,8 +26,12 @@ public class ProjectController implements Mapper{
     private final CourseDAO courseDAO;
     private final CourseEnrollmentDAO courseEnrollmentDAO;
     private final TopicDAO topicDAO;
+    private final TopicQuizDAO topicQuizDAO;
     private final UserDAO userDAO;
     private final SessionDAO sessionDAO;
+
+    private final static String NOT_AVAILABLE = "N/A";
+    private final static String BLANK_VALUE = "";
 
     public ProjectController(String mongoURIString) throws IOException {
         final MongoClient mongoClient = new MongoClient(new MongoClientURI(mongoURIString));
@@ -36,6 +40,7 @@ public class ProjectController implements Mapper{
         courseDAO = new CourseDAO(projectDatabase);
         courseEnrollmentDAO = new CourseEnrollmentDAO(projectDatabase);
         topicDAO = new TopicDAO(projectDatabase);
+        topicQuizDAO = new TopicQuizDAO(projectDatabase);
         userDAO = new UserDAO(projectDatabase);
         sessionDAO = new SessionDAO(projectDatabase);
 
@@ -92,9 +97,24 @@ public class ProjectController implements Mapper{
                         if(null!=forApproval && 0 < forApproval.size()) attributes.put("forApproval", forApproval);
                     }
                     else if("S".equals(user.getString("userType"))){
+                        List<Document> displayableTopics = new ArrayList<>();
+                        List<Document> listTopicQuiz = topicQuizDAO.findByStudentDateDescending(username);
+
                         String[] arClasses = classes.toArray(new String[0]);
                         List<Document> topics = topicDAO.findByClassesLatest(arClasses);
+                        if(null!=topics){
+                            for(Document docTopics : topics){
+                                String id = docTopics.getString("_id");
+                                //if(!studentTakenTopicQuiz(listTopicQuiz, id)) displayableTopics.add(docTopics);
+                                if(studentTakenTopicQuiz(listTopicQuiz, id)){
+                                    System.out.println("[taken]: " + id);
+                                    docTopics.append("taken", true);
+                                }
+                            }
+                        }
+
                         attributes.put("topics", topics);
+                        //attributes.put("topics", displayableTopics);
                     }
                 }
             }
@@ -280,9 +300,24 @@ public class ProjectController implements Mapper{
                         if(null!=forApproval && 0 < forApproval.size()) attributes.put("forApproval", forApproval);
                     }
                     else if("S".equals(user.getString("userType"))){
+                        List<Document> displayableTopics = new ArrayList<>();
+                        List<Document> listTopicQuiz = topicQuizDAO.findByStudentDateDescending(username);
+
                         String[] arClasses = classes.toArray(new String[0]);
                         List<Document> topics = topicDAO.findByClassesLatest(arClasses);
+                        if(null!=topics){
+                            for(Document docTopics : topics){
+                                String id = docTopics.getString("_id");
+                                //if(!studentTakenTopicQuiz(listTopicQuiz, id)) displayableTopics.add(docTopics);
+                                if(studentTakenTopicQuiz(listTopicQuiz, id)){
+                                    System.out.println("[taken]: " + id);
+                                    docTopics.append("taken", true);
+                                }
+                            }
+                        }
+
                         attributes.put("topics", topics);
+                        //attributes.put("topics", displayableTopics);
                     }
                 }
 
@@ -320,15 +355,6 @@ public class ProjectController implements Mapper{
 
             return new ModelAndView(attributes, "approvals.ftl");
         }, new FreeMarkerTemplateEngine());
-
-/*
-        get("login", (request, response) -> {
-                    Map<String, Object> attributes = new HashMap<>();
-                    attributes.put("message", "Hello World!");
-
-            return new ModelAndView(attributes, "home.ftl");
-        }, new FreeMarkerTemplateEngine());
-*/
 
         // will present the form used to process creation of new class
         get("newCourse", (request, response) -> {
@@ -396,8 +422,41 @@ public class ProjectController implements Mapper{
                     List<Document> forApproval = courseEnrollmentDAO.getCourseRegistrationList(classCode);
                     if(null!=forApproval && 0 < forApproval.size()) attributes.put("forApproval", forApproval);
 
+                    int topicsCount = topicDAO.getCourseTopicsCount(classCode);
+                    //System.out.println("\n[topicsCount]: " + topicsCount);
+
+                    List<Document> listTopicQuiz = topicQuizDAO.findByCourseCodeDateDescending(classCode);
                     List<Document> classList = userDAO.getClassStudents(classCode);
-                    if(null!=classList && 0 < classList.size()) attributes.put("classList", classList);
+                    if(null!=classList && 0 < classList.size()){
+                        for(Document s : classList){
+                            String student = s.getString("_id");
+                            //System.out.println("\n[student]: " + student);
+
+                            double totalScore = 0.0;
+                            for(Document tq : listTopicQuiz){
+                                if(tq.getString("student").equalsIgnoreCase(student)){
+                                    //System.out.println("[topic-id]: " + tq.getString("topicId"));
+                                    double score = tq.getInteger("topicScore");
+                                    double itemCount = 0.0;
+                                    //System.out.println("[score]: " + score);
+                                    if(null!=tq.get("questions")){
+                                        ArrayList<Document> questions =  (ArrayList) tq.get("questions");
+                                        itemCount = questions.size();
+                                    }
+
+                                    double topicAverage = score/itemCount * 100;
+                                    //System.out.println("[topicAverage]: " + topicAverage);
+                                    totalScore+=topicAverage;
+                                }
+                            }
+
+                            double totalAverage = totalScore/topicsCount;
+                            s.append("totalScore", totalScore).append("totalAverage", totalAverage);
+                            //System.out.println("[totalScore]: " + totalScore);
+                            //System.out.println("[totalAverage]: " + totalAverage);
+                        }
+                        attributes.put("classList", classList);
+                    }
 
                 }
                 else {
@@ -537,7 +596,7 @@ public class ProjectController implements Mapper{
 //                System.out.println("[TOPIC-ID]: " + topicId);
 //                System.out.println("---------------------------------------------");
 //                System.out.println("\n\n");
-
+                boolean allowTopicSubmit = false;
                 if(null!=topicId){
                     Document docTopic = topicDAO.findById(topicId);
 //                    System.out.println("TOPIC: " + docTopic.toJson());
@@ -562,15 +621,37 @@ public class ProjectController implements Mapper{
                         attributes.put("topic", docTopic.getString("topic"));
                         attributes.put("summary", docTopic.getString("summary"));
                         attributes.put("videoLink", docTopic.getString("videoLink"));
+                        attributes.put("showVideoPlayer", true);
 
                         ArrayList<Document> items =  (ArrayList) docTopic.get("items");
 //                        System.out.println("items.count: " + items.size());
 
                         attributes.put("items", items);
+
+                        //If student has taken the topic quiz, it should show the list of top student scores for this topic
+                        if(null!=topicQuizDAO.findByTopicIdAndCourseAndStudent(topicId, username, classCode)){
+                            List<Document> listTopScores = topicQuizDAO.findByTopicIdOrderByScoreAndDateDescending(topicId);
+                            attributes.put("listTopScores", listTopScores);
+                        }
+                        else
+                            allowTopicSubmit = true;
+
                     }
-                    else
+                    else {
                         System.out.println("Topic not found!");
+
+                        attributes.put("topicId", NOT_AVAILABLE);
+                        attributes.put("courseCode", BLANK_VALUE);
+                        attributes.put("course", BLANK_VALUE);
+
+                        attributes.put("topic", NOT_AVAILABLE);
+                        attributes.put("summary", NOT_AVAILABLE);
+                        attributes.put("videoLink", BLANK_VALUE);
+                        attributes.put("showVideoPlayer", false);
+                    }
                 }
+
+                attributes.put("allowTopicSubmit", allowTopicSubmit);
             }
 
             return new ModelAndView(attributes, "view_topic_template.ftl");
@@ -599,4 +680,13 @@ public class ProjectController implements Mapper{
         }, new FreeMarkerTemplateEngine());
     }
 
+    public boolean studentTakenTopicQuiz(List<Document> list, String id){
+        if(null!=list && null!=id){
+            for(Document d : list){
+                String topicId = d.getString("topicId");
+                if(null!=topicId && id.equalsIgnoreCase(topicId)) return true;
+            }
+        }
+        return false;
+    }
 }

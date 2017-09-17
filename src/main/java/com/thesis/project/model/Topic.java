@@ -10,7 +10,7 @@ public class Topic {
     public Topic(){}
 
     private String _id;
-    private String className;
+    private String classCode;
     private String topic;
     private String videoLink;
     private String summary;
@@ -26,12 +26,12 @@ public class Topic {
         this._id = _id;
     }
 
-    public String getClassName() {
-        return className;
+    public String getClassCode() {
+        return classCode;
     }
 
-    public void setClassName(String className) {
-        this.className = className;
+    public void setClassCode(String classCode) {
+        this.classCode = classCode;
     }
 
     public String getTopic() {
@@ -88,18 +88,8 @@ public class Topic {
         private String id;
         private String question;
         private String answerType;
-        private String choiceA;
-        private String choiceB;
-        private String choiceC;
-        private String choiceD;
-        private String choiceE;
-        private String singleAnswer;
-        private String booleanValue;
-        private String answerA;
-        private String answerB;
-        private String answerC;
-        private String answerD;
-        private String answerE;
+        private List<String> choices;
+        private List<String> answers;
 
         public String getId() {
             return id;
@@ -125,101 +115,20 @@ public class Topic {
             this.answerType = answerType;
         }
 
-        public String getChoiceA() {
-            return choiceA;
+        public List<String> getChoices() {
+            return choices;
         }
 
-        public void setChoiceA(String choiceA) {
-            this.choiceA = choiceA;
+        public void setChoices(List<String> choices) {
+            this.choices = choices;
         }
 
-        public String getChoiceB() {
-            return choiceB;
+        public List<String> getAnswers() {
+            return answers;
         }
 
-        public void setChoiceB(String choiceB) {
-            this.choiceB = choiceB;
+        public void setAnswers(List<String> answers) {
+            this.answers = answers;
         }
-
-        public String getChoiceC() {
-            return choiceC;
-        }
-
-        public void setChoiceC(String choiceC) {
-            this.choiceC = choiceC;
-        }
-
-        public String getChoiceD() {
-            return choiceD;
-        }
-
-        public void setChoiceD(String choiceD) {
-            this.choiceD = choiceD;
-        }
-
-        public String getChoiceE() {
-            return choiceE;
-        }
-
-        public void setChoiceE(String choiceE) {
-            this.choiceE = choiceE;
-        }
-
-        public String getSingleAnswer() {
-            return singleAnswer;
-        }
-
-        public void setSingleAnswer(String singleAnswer) {
-            this.singleAnswer = singleAnswer;
-        }
-
-        public String getBooleanValue() {
-            return booleanValue;
-        }
-
-        public void setBooleanValue(String booleanValue) {
-            this.booleanValue = booleanValue;
-        }
-
-        public String getAnswerA() {
-            return answerA;
-        }
-
-        public void setAnswerA(String answerA) {
-            this.answerA = answerA;
-        }
-
-        public String getAnswerB() {
-            return answerB;
-        }
-
-        public void setAnswerB(String answerB) {
-            this.answerB = answerB;
-        }
-
-        public String getAnswerC() {
-            return answerC;
-        }
-
-        public void setAnswerC(String answerC) {
-            this.answerC = answerC;
-        }
-
-        public String getAnswerD() {
-            return answerD;
-        }
-
-        public void setAnswerD(String answerD) {
-            this.answerD = answerD;
-        }
-
-        public String getAnswerE() {
-            return answerE;
-        }
-
-        public void setAnswerE(String answerE) {
-            this.answerE = answerE;
-        }
-
     }
 }

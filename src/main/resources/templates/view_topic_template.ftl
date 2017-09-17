@@ -46,7 +46,9 @@
                             </div>
 
                             <div id="divVplayer" class="form-group">
-                                <iframe></iframe>
+                                <#if showVideoPlayer?? && showVideoPlayer==true>
+                                    <iframe></iframe>
+                                </#if>
                             </div>
 
                             <div class="form-group right-inner-addon">
@@ -66,63 +68,92 @@
                     </div>
                 </div>
                 <div class="col-sm-5 pull-right">
-                    <div class="panel panel-info">
-                        <h4>Questions</h4>
-                        <div class="panel-body underlined" style="border-right: 1px solid #eee;">
-                            <#if items??>
+                    <#if listTopScores??>
+                        <div class="panel panel-info">
+                            <h4>Top Scores</h4>
+                            <div class="panel-body underlined" style="border-right: 1px solid #eee;">
+                                <table id="tblClassList" class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Student</th>
+                                            <th>Score</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <#if listTopScores??>
+                                            <#list listTopScores as ts>
+                                            <tr>
+                                                <td>${ts["studentName"]}</td>
+                                                <td>${ts["topicScore"]}</td>
+                                            </tr>
+                                            </#list>
+                                        </#if>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    <#elseif items??>
+                        <div class="panel panel-info">
+                            <h4>Questions</h4>
+                            <div class="panel-body underlined" style="border-right: 1px solid #eee;">
                                 <ol id="lstQuestions" class="list-group" type="1.">
                                     <#list items as i>
                                         <li>
                                             <span>${i.question}</span>
                                             <input type="hidden" class="itemId" value="${i.id}" />
-                                            <input type="hidden" class="answerType" value="${i.answer_type}" />
+                                            <input type="hidden" class="answerType" value="${i.answerType}" />
                                             <section>
-                                                <p>
-                                                    <#if i.answer_type?? && 'SINGLE_ANSWER'==i.answer_type>
-                                                        <ul style="list-style: none;">
-                                                            <#if i.choices??>
-                                                                <#list i.choices as c>
-                                                                    <li><label><input type="radio" name="${i.id}" value="${c}">${c}</label></li>
-                                                                </#list>
-                                                            </#if>
-                                                        </ul>
-                                                    <#elseif i.answer_type?? && 'MULTIPLE_ANSWERS'==i.answer_type>
-                                                        <ul style="list-style: none;">
-                                                            <#if i.answers??>
-                                                                <#list i.choices as c>
-                                                                    <li><label><input type="checkbox" name="${i.id}" value="${c}">${c}</label></li>
-                                                                </#list>
-                                                            </#if>
-                                                        </ul>
-                                                    <#elseif i.answer_type?? && 'BOOLEAN'==i.answer_type>
-                                                        <ul style="list-style: none;">
-                                                            <#if i.choices??>
-                                                                <#list i.choices as c>
-                                                                    <li><label><input type="radio" name="${i.id}" value="${c}">${c}</label></li>
-                                                                </#list>
-                                                            </#if>
-                                                        </ul>
-                                                    </#if>
+                                            <p>
+                                                <#if i.answerType?? && 'SINGLE_ANSWER'==i.answerType>
+                                                    <ul style="list-style: none;">
+                                                        <#if i.choices??>
+                                                            <#list i.choices as c>
+                                                                <li><label><input type="radio" name="${i.id}" value="${c}">${c}</label></li>
+                                                            </#list>
+                                                        </#if>
+                                                    </ul>
+                                                <#elseif i.answerType?? && 'MULTIPLE_ANSWERS'==i.answerType>
+                                                    <ul style="list-style: none;">
+                                                        <#if i.answers??>
+                                                            <#list i.choices as c>
+                                                                <li><label><input type="checkbox" name="${i.id}" value="${c}">${c}</label></li>
+                                                            </#list>
+                                                        </#if>
+                                                    </ul>
+                                                <#elseif i.answerType?? && 'BOOLEAN'==i.answerType>
+                                                    <ul style="list-style: none;">
+                                                        <#if i.choices??>
+                                                            <#list i.choices as c>
+                                                                <li><label><input type="radio" name="${i.id}" value="${c}">${c}</label></li>
+                                                            </#list>
+                                                        </#if>
+                                                    </ul>
+                                                </#if>
                                                 </p>
                                             </section>
                                         </li>
                                     </#list>
                                 </ol>
-                            </#if>
-
+                            </div>
                         </div>
+                    <#else>
+                        <div class="panel panel-info">
+                            <h4>Topic Not Found!</h4>
+                        </div>
+                    </#if>
 
-                    </div>
                 </div>
 
-                <div class="row top-space">
-                    <div class="form-group">
-                        <!-- Button -->
-                        <div class="col-md-offset-3 col-md-11">
-                            <button type="button" class="btn btn-primary btn-lg" onclick="submitTopicQuiz()">Submit Answers</button>
+                <#if allowTopicSubmit?? && allowTopicSubmit>
+                    <div class="row top-space">
+                        <div class="form-group">
+                            <!-- Button -->
+                            <div class="col-md-offset-3 col-md-11">
+                                <button type="button" class="btn btn-primary btn-lg" onclick="submitTopicQuiz()">Submit Answers</button>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </#if>
 
             </div>
 
